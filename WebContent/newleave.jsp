@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@ page import="java.sql.*" %>
+<%@ page import="java.sql.*" %>
+<%@ page import="com.leave.*" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,10 +25,6 @@
 </head>
 
 <body>
-	<%@ page import="java.sql.*" %>
-	<%@ page import="java.sql.*" %>
-	<%@ page import="com.leave.*" %>
-
 	<% 
 		HttpSession sess=request.getSession();
 		if(sess.getAttribute("name")==null){
@@ -60,7 +59,7 @@
 		<ul class="nav menu">
 			<li class="active"><a href="userwelcome.jsp"><svg class="glyph stroked dashboard-dial"><use xlink:href="#stroked-dashboard-dial"></use></svg> Dashboard</a></li>
 			<li><a href="newleave.jsp"><svg class="glyph stroked calendar"><use xlink:href="#stroked-calendar"></use></svg> Apply for Leave</a></li>
-			<li><a href="charts.html"><svg class="glyph stroked line-graph"><use xlink:href="#stroked-line-graph"></use></svg> Cancel Leave</a></li>
+			<li><a href="cancelLeave.jsp"><svg class="glyph stroked line-graph"><use xlink:href="#stroked-line-graph"></use></svg> Cancel Leave</a></li>
 			<li><a href="tables.html"><svg class="glyph stroked table"><use xlink:href="#stroked-table"></use></svg> Leave History</a></li>
 			
 		</ul>
@@ -86,6 +85,11 @@
 		<div class="col-xs-12 col-md-8">
 			<div class="login-panel panel panel-default">
 				<div class="panel-heading">Apply for Leave</div>
+				<%if(request.getAttribute("errorMsg")!=null){ System.out.println("error: "+request.getAttribute("errorMsg"));%>
+				<h5 style="color:red;margin-left:20px">&#9888 <%=request.getAttribute("errorMsg").toString()%></h5>
+				<%}else if(request.getAttribute("successMsg")!=null){%>
+				<h5 style=color:green;margin-left:20px>&#10004 <%=request.getAttribute("successMsg").toString()%></h5>
+				<%} %>
 				<div class="panel-body">
 					<form method="post" action="leaveApp">
 						<fieldset>
@@ -99,11 +103,21 @@
 							</div>
 							<div class="form-group">
 									<label>Start Date</label>
-									<input class="form-control" id="StartDate" name="startdate" required>
+									<input class="form-control" id="StartDate" name="startdate" placeholder="MM/DD/YYY" required>
+								<div id="errorMsg1" style="display:none">
+								<p style="color:red">Date Entered is lesser than Current Date</p>
+								</div>
+								<div id="errorMsg2" style="display:none">
+								<p style="color:red">Date Entered is greater than End Date</p>
+								</div>
 							</div>
+							
 							<div class="form-group">
 									<label>End Date</label>
-									<input class="form-control" id="EndDate" name="enddate" required>
+									<input class="form-control" id="EndDate" name="enddate" placeholder="MM/DD/YYY" required>
+								<div id="errorMsg3" style="display:none">
+								<p style="color:red">End date should be greater than Start date</p>
+								</div>
 							</div>
 							<div class="form-group">
 									<label>Comment</label>
@@ -139,9 +153,6 @@
 	<script src="js/easypiechart-data.js"></script>
 	<script src="js/bootstrap-datepicker.js"></script>
 	<script>
-		$('#calendar').datepicker({
-		});
-
 		!function ($) {
 		    $(document).on("click","ul.nav li.parent > a > span.icon", function(){          
 		        $(this).find('em:first').toggleClass("glyphicon-minus");      
@@ -161,34 +172,36 @@
 	$("#StartDate, #EndDate").datepicker({
 	    format: 'dd/mm/yyyy',
 	}).on('changeDate', function(e){
-	    $(this).datepicker('hide');
+	    $(this).datepicker('hide'); 
 	});
 	$("#StartDate").change(function () {
 		var dateEntered = document.getElementById("StartDate").value; 
-	    
-	 
+		if(dateEntered!=""){
+	    console.log("dateEntered"+dateEntered	);
 	    var date = dateEntered.substring(0, 2);
 	    var month = dateEntered.substring(3, 5);
 	    var year = dateEntered.substring(6, 10);
 	    
 	    console.log("prnting date..."+ date+" : "+month+" : "+year);
-	 
+
 	    var dateToCompare = new Date(year, month - 1, date);
 	    console.log("date to compare"+ dateToCompare);
 	    var q = new Date();
 	    var m = q.getMonth();
 	    var d = q.getDate();
 	    var y = q.getFullYear();
-
+	 
 	    var currentDate = new Date(y,m,d);
 	    
 	    console.log("dcurrent date"+ currentDate);
 	    if ((dateToCompare < currentDate)) {
+	    	document.getElementById("errorMsg1").style.display="block";
+	        document.getElementById("StartDate").value = ""; 
 	        
-	        alert("Date Entered is lesser than Current Date");
-	        
-	        document.getElementById("StartDate").value = "";
-	        
+	    }else{
+	    	
+	    	document.getElementById("errorMsg1").style.display="none";
+	    	
 	    }
 	    
 	    var endDate = document.getElementById("EndDate").value;
@@ -196,22 +209,30 @@
 	    var emonth = endDate.substring(3, 5);
 	    var eyear = endDate.substring(6, 10);
 	    var eDate = new Date(eyear, emonth - 1, edate);
-	    console.log("end date"+ endDate);
-		if ((dateToCompare > edate)&&(endDate!="")) {
-	        
-	        alert("Date Entered is greater than End Date");
-	        
-	        document.getElementById("EndDate").value = "";
-	        document.getElementById("StartDate").value = "";
-	        
-	    }
+	    console.log("end date"+ eDate);
+	    if ((( dateToCompare>eDate)&&(endDate!=""))) {
+	    	console.log("date to compare: "+dateToCompare)
+	    	console.log("End Date: "+edate)
+      console.log(dateToCompare>eDate);
+      console.log(document.getElementById("EndDate").value!="");
+	    	console.log("Error2!!")
+	        document.getElementById("errorMsg2").style.display="block";
+	    	document.getElementById("StartDate").value="";
 	    
+	         
+	        
+	    }else{
+	    	document.getElementById("errorMsg2").style.display="none";
+	    }
+		
+		}
 	});
 	$("#EndDate").change(function () {
 		
 	    var startDate = document.getElementById("StartDate").value;
 	    var endDate = document.getElementById("EndDate").value;
-	    
+	    if(endDate!="")
+	    {
 	    var sdate = startDate.substring(0, 2);
 	    var smonth = startDate.substring(3, 5);
 	    var syear = startDate.substring(6, 10);
@@ -224,9 +245,16 @@
 	    var eDate = new Date(eyear, emonth, edate);
 	 
 	    if (eDate < sDate) {
-	        alert("End date should be greater than Start date");
-	        document.getElementById("EndDate").value = "";
+	    	console.log("sDate: "+sDate);
+	    	console.log("eDate: "+eDate);
+	    	console.log(eDate < sDate);
+	    	document.getElementById("EndDate").value = ""; 
+	    	document.getElementById("errorMsg3").style.display="block";
+	    }else{
+	    	document.getElementById("errorMsg3").style.display="none";
 	    }
+	    }
+	   
 	});
 	</script>	
 </body>

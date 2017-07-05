@@ -6,7 +6,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Login</title>
-
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link href="css/datepicker3.css" rel="stylesheet">
 <link href="css/styles.css" rel="stylesheet">
@@ -35,6 +34,9 @@
 			<div class="login-panel panel panel-default">
 				<div class="panel-heading">Log in</div>
 				<div class="panel-body">
+				<%if(request.getAttribute("ErrorMsg")!=null){ System.out.println("error: "+request.getAttribute("ErrorMsg"));%>
+				<h5 style="color:red">&#9888 <%=request.getAttribute("ErrorMsg").toString()%></h5>
+				<%}%>
 					<form method="post" action="Login">
 						<fieldset>
 							<div class="form-group">

@@ -76,7 +76,8 @@ public class Login extends HttpServlet {
 			
 				con.close();
 				//out.println("Invalid Credentials");
-				out.println("<script>alert('Enter The Correct Credentials')</script>");
+				/*out.println("<script>alert('Enter The Correct Credentials')</script>");*/
+				request.setAttribute("ErrorMsg", "Enter The Correct Credentials");
 				request.getRequestDispatcher("index.jsp").include(request,response);
 				
 			
@@ -120,7 +121,8 @@ public class Login extends HttpServlet {
 				}
 					con.close();
 					//out.println("Invalid Credentials");
-					out.println("<script>alert('Enter The Correct Credentials')</script>");
+					/*out.println("<script>alert('Enter The Correct Credentials')</script>");*/
+					request.setAttribute("ErrorMsg", "Enter The Correct Credentials");
 					request.getRequestDispatcher("index.jsp").include(request,response);
 					
 			}	

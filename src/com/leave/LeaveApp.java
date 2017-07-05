@@ -88,13 +88,15 @@ public class LeaveApp extends HttpServlet {
 		        }
 			}
 			if(flag==1){
-				out.println("<script>alert('Sorry you have already applied for these dates.')</script>");
+				/*out.println("<script>alert('Sorry you have already applied for these dates.')</script>");*/
+				request.setAttribute("errorMsg","Sorry you have already applied for these dates.");
 				request.getRequestDispatcher("newleave.jsp").include(request,response);
 				}
 			}
 			else if (currDays<=0) {
 				con.close();
-				out.println("<script>alert('Please choose start date as todays or later')</script>");
+				/*out.println("<script>alert('Please choose start date as todays or later')</script>");*/
+				request.setAttribute("errorMsg","Please choose start date as todays or later");
 				request.getRequestDispatcher("newleave.jsp").include(request,response);
 				}
 		} catch (ParseException | SQLException e1) {
@@ -136,18 +138,23 @@ public class LeaveApp extends HttpServlet {
 			    		ps.setString(2, userid);
 			    		ps.executeUpdate();
 			    		con.close();
-			    		out.println("<script>alert('Successfully Applied for Leave'</script>");
-			    		response.sendRedirect("userwelcome.jsp");
+			    		/*out.println("<script>alert('Successfully Applied for Leave'</script>");
+			    		response.sendRedirect("userwelcome.jsp");*/
+			    		request.setAttribute("successMsg","Successfully Applied for Leave");
+			    		request.getRequestDispatcher("newleave.jsp").include(request,response);
+			    		
 						
 					}
 					else if (days>leave_left) {
 						con.close();
-						out.println("<script>alert('Sorry you don't have enough leave balance')</script>");
+						/*out.println("<script>alert('Sorry you don't have enough leave balance')</script>");*/
+						request.setAttribute("errorMsg","Sorry you don't have enough leave balance");
 						request.getRequestDispatcher("newleave.jsp").include(request,response);
 						}
 					else {
 						con.close();
-						out.println("<script>alert('Please enter the correct details')</script>");
+						/*out.println("<script>alert('Please enter the correct details')</script>");*/
+						request.setAttribute("errorMsg","Please enter the correct details");
 						request.getRequestDispatcher("newleave.jsp").include(request,response);
 						}
 				}
@@ -192,19 +199,25 @@ public class LeaveApp extends HttpServlet {
 			    		ps.setString(2, userid);
 			    		ps.executeUpdate();
 			    		con.close();
-			    		out.println("<script>alert('Successfully Applied for Leave'</script>");
-			    		response.sendRedirect("userwelcome.jsp");
+			    		/*out.println("<script>alert('Successfully Applied for Leave'</script>");
+			    		response.sendRedirect("userwelcome.jsp");*/
+			    		request.setAttribute("successMsg","Successfully Applied for Leave");
+			    		request.getRequestDispatcher("newleave.jsp").include(request,response);
 						
 					}
 					else if (days>leave_left) {
 						con.close();
-						out.println("<script>alert('Sorry you don't have enough leave balance')</script>");
+						/*out.println("<script>alert('Sorry you don't have enough leave balance')</script>");
+						request.getRequestDispatcher("newleave.jsp").include(request,response);*/
+						request.setAttribute("errorMsg","Sorry you don't have enough leave balance");
 						request.getRequestDispatcher("newleave.jsp").include(request,response);
 						}
 					
 					else {
 						con.close();
-						out.println("<script>alert('Please enter the correct details')</script>");
+						/*out.println("<script>alert('Please enter the correct details')</script>");
+						request.getRequestDispatcher("newleave.jsp").include(request,response);*/
+						request.setAttribute("errorMsg","Please enter the correct details");
 						request.getRequestDispatcher("newleave.jsp").include(request,response);
 						}
 				}
