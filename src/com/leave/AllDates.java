@@ -24,8 +24,9 @@ public class AllDates {
     public static void main(String[] args) throws ParseException {
     	String startdate="14/04/2017";
     	String enddate="15/04/2017";
-		String currDate = GetCurrentDateTime.test();
-		System.out.println(currDate);
+		//String currDate = GetCurrentDateTime.test();
+    	String currDate = "14/04/2017";
+    	System.out.println(currDate);
 		int currDays=DateDiff.test(currDate, startdate);
 		System.out.println(currDays);
 		int flag=0;
@@ -34,7 +35,7 @@ public class AllDates {
 		List<DateTime> between = AllDates.getDateRange(start, end);
 		if(currDays>0){
 			
-				DateTime a = DateTime.parse(ChangeDate.test("14/04/2017"));
+				DateTime a = DateTime.parse(ChangeDate.test("16/04/2017"));
 		        DateTime b = DateTime.parse(ChangeDate.test("19/04/2017"));
 				
 		        for (DateTime d : between) {

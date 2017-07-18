@@ -62,19 +62,19 @@ public class LeaveApp extends HttpServlet {
 		try {
 			int flag=0;
     		String currDate = GetCurrentDateTime.test();
-    		int currDays=DateDiff.test(currDate, startdate);
-    		out.println(currDays);
+    		/*int currDays=DateDiff.test(currDate, startdate);
+    		out.println(currDays);*/
 			DateTime start = DateTime.parse(ChangeDate.test(startdate));
 	        DateTime end = DateTime.parse(ChangeDate.test(enddate));
 			List<DateTime> between = AllDates.getDateRange(start, end);
 			Connection con=DBConnection.getConnection();
 			Statement stm=con.createStatement();
-			String qquery="select startdate,enddate from emp_leave where EmpID=? and enddate >= ?";
+			String qquery="select startdate,enddate from emp_leave where EmpID=? and enddate >= ? and status in ('Pending','Approved','CancelPending','CancelRejected')";
 			PreparedStatement p=con.prepareStatement(qquery);
 			p.setString(1, userid);
 			p.setString(2, currDate);
 			ResultSet rs=p.executeQuery();
-			if(currDays>0){
+			
 			while(rs.next())
 			{
 				DateTime a = DateTime.parse(ChangeDate.test(rs.getString(1)));
@@ -92,13 +92,7 @@ public class LeaveApp extends HttpServlet {
 				request.setAttribute("errorMsg","Sorry you have already applied for these dates.");
 				request.getRequestDispatcher("newleave.jsp").include(request,response);
 				}
-			}
-			else if (currDays<=0) {
-				con.close();
-				/*out.println("<script>alert('Please choose start date as todays or later')</script>");*/
-				request.setAttribute("errorMsg","Please choose start date as todays or later");
-				request.getRequestDispatcher("newleave.jsp").include(request,response);
-				}
+			
 		} catch (ParseException | SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
