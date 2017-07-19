@@ -67,8 +67,8 @@ public class Login extends HttpServlet {
 					HttpSession session=request.getSession();
 					session.setAttribute("name", id);
 					session.setAttribute("username", username);
-					out.println("Login Successful");
-					response.sendRedirect("userwelcome.jsp");
+					/*response.sendRedirect("userwelcome.jsp");*/
+					request.getRequestDispatcher("userwelcome.jsp").include(request,response);
 	
 				}
 				
@@ -78,7 +78,7 @@ public class Login extends HttpServlet {
 				//out.println("Invalid Credentials");
 				/*out.println("<script>alert('Enter The Correct Credentials')</script>");*/
 				request.setAttribute("ErrorMsg", "Enter The Correct Credentials");
-				request.getRequestDispatcher("index.jsp").include(request,response);
+				/*request.getRequestDispatcher("index.jsp").include(request,response);*/
 				
 			
 		}
@@ -123,7 +123,7 @@ public class Login extends HttpServlet {
 					//out.println("Invalid Credentials");
 					/*out.println("<script>alert('Enter The Correct Credentials')</script>");*/
 					request.setAttribute("ErrorMsg", "Enter The Correct Credentials");
-					request.getRequestDispatcher("index.jsp").include(request,response);
+					/*request.getRequestDispatcher("index.jsp").include(request,response);*/
 					
 			}	
 		
@@ -133,5 +133,6 @@ public class Login extends HttpServlet {
 		  }
 		
 		}
+		request.getRequestDispatcher("index.jsp").include(request,response);
 	}
 }

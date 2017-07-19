@@ -6,10 +6,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Leave History</title>
-
+<script src="js/jquery-1.11.1.min.js"></script>
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link href="css/datepicker3.css" rel="stylesheet">
 <link href="css/styles.css" rel="stylesheet">
+<script src="js/bootstrap-table.js"></script>
 
 <!--Icons-->
 <script src="js/lumino.glyphs.js"></script>
@@ -92,7 +93,7 @@
 						<table data-toggle="table" id="table-style" data-row-style="rowStyle" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-search="true" data-select-item-name="toolbar1" data-pagination="true" data-sort-name="name" data-sort-order="desc">
 						    <thead>
 						    <tr>
-						        <th data-field="id" data-align="right" >Leave ID</th>
+						        <th data-field="id">Leave ID</th>
 						        <th data-field="type" >Leave Type</th>
 						        <th data-field="s_date" >Start Date</th>
 						        <th data-field="e_date" >End Date</th>
@@ -101,7 +102,7 @@
 						    </tr>
 						    </thead>
 						    <% do{ %>
-						    <tr>
+						    <tr class="<%= rs.getString(6) %>">
 	  							<td><%= rs.getString(1) %></td> 
 	  
 	 							<td><%= rs.getString(2) %></td>
@@ -118,7 +119,7 @@
 	  							<% con.close();} %>
 	  							<% } %>
 						</table>
-						<script>
+					<!-- 	<script>
 						    function rowStyle(row, index) {
 						        var classes = ['active', 'success', 'info', 'warning', 'danger'];
 						        var data = document.getElementById("table-style");
@@ -132,12 +133,12 @@
 						         }
 						        return {};
 						    }
-						</script>
+						</script> -->
 					</div>
 				</div>
 			</div>
 	</div>	<!--/.main-->
-	<script src="js/jquery-1.11.1.min.js"></script>
+	
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/chart.min.js"></script>
 	<script src="js/chart-data.js"></script>
@@ -145,6 +146,7 @@
 	<script src="js/easypiechart-data.js"></script>
 	<script src="js/bootstrap-datepicker.js"></script>
 	<script src="js/bootstrap-table.js"></script>
+	
 	<script>
 		$('#calendar').datepicker({
 		});
@@ -162,7 +164,22 @@
 		$(window).on('resize', function () {
 		  if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
 		})
+		
 	</script>	
+<!-- 	<script type="text/javascript">
+	$(function(){
+		  $("tr").each(function(){
+		    var col_val = $(this).find("td:eq(5)").text();
+		    if ((col_val == "Pending")|(col_val == "CancelPending")){
+		      $(this).addClass('warning');  //the selected class colors the row green//
+		    }else if ((col_val == "Approved")|(col_val == "CancelApproved")){
+		      $(this).addClass('success');
+		    }else if ((col_val == "Rejected")|(col_val == "CancelRejected")){
+		    	$(this).addClass('danger');
+		    }
+		  });
+		});
+	</script> -->
 </body>
 
 </html>

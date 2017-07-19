@@ -34,7 +34,7 @@
 			<div class="login-panel panel panel-default">
 				<div class="panel-heading">Log in</div>
 				<div class="panel-body">
-				<%if(request.getAttribute("ErrorMsg")!=null){ System.out.println("error: "+request.getAttribute("ErrorMsg"));%>
+				<%if(request.getAttribute("ErrorMsg")!=null){%>
 				<h5 style="color:red">&#9888 <%=request.getAttribute("ErrorMsg").toString()%></h5>
 				<%}%>
 					<form method="post" action="Login">

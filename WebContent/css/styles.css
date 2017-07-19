@@ -246,9 +246,8 @@ fieldset[disabled] .btn-danger.active {
 a.bg-primary:hover {
 	background-color: #e9ecf2;
 }
-.bg-success {
-	color: #fff;
-	background-color: #8ad919;
+.fixed-table-container tbody tr.Approved,tr.CancelApproved{
+	background-color: #98e698;
 }
 a.bg-success:hover {
 	background-color: #8ad919;
@@ -266,19 +265,17 @@ a.bg-info:hover {
 .bg-info a {
 	color: rgba(255, 255, 255, .75);
 }
-.bg-warning {
-	color: #fff;
+.fixed-table-container tbody tr.Pending,tr.CancelPending {
+	background-color: #B0E0E6;
+}
+a.fixed-table-container tbody tr.Pending,tr.CancelPending:hover {
 	background-color: #ffb53e;
 }
-a.bg-warning:hover {
-	background-color: #ffb53e;
-}
-.bg-warning a {
+a.bg-warning{
 	color: rgba(255, 255, 255, .75);
 }
-.bg-danger {
-	color: #fff;
-	background-color: #f9243f;
+.fixed-table-container tbody tr.Rejected,tr.CancelRejected {
+	background-color: #ffb2b2 ;
 }
 a.bg-danger:hover {
 	background-color: #f9243f;
@@ -928,8 +925,8 @@ h1.page-header {
 	height: 65px;
 	overflow: scroll;
 }
-
-
+tr.approved { background-color: green }
+tr.rejected { background-color: red }
 
 
 

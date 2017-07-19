@@ -84,13 +84,14 @@ public class LeaveApp extends HttpServlet {
 		            //System.out.println(" " + d);
 		        	if(a.compareTo(d) * d.compareTo(b) >= 0){
 		        		flag=1;
+		        		break;
 		        	}
 		        }
 			}
 			if(flag==1){
 				/*out.println("<script>alert('Sorry you have already applied for these dates.')</script>");*/
 				request.setAttribute("errorMsg","Sorry you have already applied for these dates.");
-				request.getRequestDispatcher("newleave.jsp").include(request,response);
+				/*request.getRequestDispatcher("newleave.jsp").forward(request,response);*/
 				}
 			
 		} catch (ParseException | SQLException e1) {
@@ -135,7 +136,7 @@ public class LeaveApp extends HttpServlet {
 			    		/*out.println("<script>alert('Successfully Applied for Leave'</script>");
 			    		response.sendRedirect("userwelcome.jsp");*/
 			    		request.setAttribute("successMsg","Successfully Applied for Leave");
-			    		request.getRequestDispatcher("newleave.jsp").include(request,response);
+			    		/*request.getRequestDispatcher("newleave.jsp").forward(request,response);*/
 			    		
 						
 					}
@@ -143,21 +144,22 @@ public class LeaveApp extends HttpServlet {
 						con.close();
 						/*out.println("<script>alert('Sorry you don't have enough leave balance')</script>");*/
 						request.setAttribute("errorMsg","Sorry you don't have enough leave balance");
-						request.getRequestDispatcher("newleave.jsp").include(request,response);
+						/*request.getRequestDispatcher("newleave.jsp").forward(request,response);*/
 						}
 					else {
 						con.close();
 						/*out.println("<script>alert('Please enter the correct details')</script>");*/
 						request.setAttribute("errorMsg","Please enter the correct details");
-						request.getRequestDispatcher("newleave.jsp").include(request,response);
+						/*request.getRequestDispatcher("newleave.jsp").forward(request,response);*/
 						}
 				}
+				
 				
 			} catch (SQLException | ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-    		
+        	
 		}
     	
 		else if(leave_type.contentEquals("Sick/Casual leave")){
@@ -196,7 +198,7 @@ public class LeaveApp extends HttpServlet {
 			    		/*out.println("<script>alert('Successfully Applied for Leave'</script>");
 			    		response.sendRedirect("userwelcome.jsp");*/
 			    		request.setAttribute("successMsg","Successfully Applied for Leave");
-			    		request.getRequestDispatcher("newleave.jsp").include(request,response);
+			    		/*request.getRequestDispatcher("newleave.jsp").include(request,response);*/
 						
 					}
 					else if (days>leave_left) {
@@ -204,7 +206,7 @@ public class LeaveApp extends HttpServlet {
 						/*out.println("<script>alert('Sorry you don't have enough leave balance')</script>");
 						request.getRequestDispatcher("newleave.jsp").include(request,response);*/
 						request.setAttribute("errorMsg","Sorry you don't have enough leave balance");
-						request.getRequestDispatcher("newleave.jsp").include(request,response);
+						/*request.getRequestDispatcher("newleave.jsp").include(request,response);*/
 						}
 					
 					else {
@@ -212,7 +214,7 @@ public class LeaveApp extends HttpServlet {
 						/*out.println("<script>alert('Please enter the correct details')</script>");
 						request.getRequestDispatcher("newleave.jsp").include(request,response);*/
 						request.setAttribute("errorMsg","Please enter the correct details");
-						request.getRequestDispatcher("newleave.jsp").include(request,response);
+						/*request.getRequestDispatcher("newleave.jsp").include(request,response);*/
 						}
 				}
 				
@@ -222,7 +224,7 @@ public class LeaveApp extends HttpServlet {
 			}
     		
 		}
-
+		request.getRequestDispatcher("newleave.jsp").forward(request,response);
 	}
 
 }
