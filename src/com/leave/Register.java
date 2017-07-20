@@ -59,14 +59,15 @@ public class Register extends HttpServlet {
         		p.executeUpdate();
         		
         		con.close();
-        		
-				out.println("<script>alert('Successfully Registered !!!')</script>");
-				response.sendRedirect("index.jsp");
+        		request.setAttribute("successMsg","Successfully Registered, LOGIN!!");
+	    		request.getRequestDispatcher("index.jsp").forward(request,response);
+				
 					
 			} 
         	
         	catch (SQLException e) {
-        		out.println("<script>alert('Registeration Failed!!')</script>");
+        		request.setAttribute("errorMsg","Registeration Failed!!");
+        		request.getRequestDispatcher("register.jsp").forward(request,response);
 				e.printStackTrace();
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block

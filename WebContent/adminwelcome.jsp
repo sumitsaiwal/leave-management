@@ -88,8 +88,9 @@
 		
 		<ul class="nav menu">
 			<li class="active"><a href="adminwelcome.jsp"><svg class="glyph stroked dashboard-dial"><use xlink:href="#stroked-dashboard-dial"></use></svg> Dashboard</a></li>
-			<li><a href="approvals.jsp"><svg class="glyph stroked calendar"><use xlink:href="#stroked-calendar"></use></svg> Approvals</a></li>
-			<li><a href="approvalhistory.jsp"><svg class="glyph stroked line-graph"><use xlink:href="#stroked-line-graph"></use></svg> Approval History</a></li>
+			<li><a href="Approval.jsp"><svg class="glyph stroked calendar"><use xlink:href="#stroked-calendar"></use></svg>Leave Approvals</a></li>
+			<li><a href="CancellationApproval.jsp"><svg class="glyph stroked table"><use xlink:href="#stroked-table"></use></svg>Cancellation Approvals</a></li>
+			<li><a href="ApprovalHistory.jsp"><svg class="glyph stroked line-graph"><use xlink:href="#stroked-line-graph"></use></svg>Approval History</a></li>
 			
 		</ul>
 	</div><!--/.sidebar-->

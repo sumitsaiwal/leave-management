@@ -1,131 +1,50 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<%@ page import="java.sql.*" %>
-<%@ page import="java.sql.*" %>
-<%@ page import="com.leave.*" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cancel Leave</title>
+
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link href="css/datepicker3.css" rel="stylesheet">
+<link href="css/bootstrap-table.css" rel="stylesheet">
 <link href="css/styles.css" rel="stylesheet">
-<link href='css/fullcalendar.min.css' rel='stylesheet' />
-<link href='css/fullcalendar.print.min.css' rel='stylesheet' media='print' />
-<script src='js/moment.min.js'></script>
-<script src='js/jquery.min.js'></script>
-<script src='js/fullcalendar.min.js'></script>
-<style>
-.fc-time{
-   display : none;
-}
-</style>
-<script>
 
-	$(document).ready(function() {
-		var leaveType=null;
-		var startDate=null;
-		var endDate=null
-		var eventData=null;
-		$.ajax({
-           url : "DateClient",
-           type : "POST",
-           success : function(responseJson) {
-              console.log(responseJson);  
-              
-                leaveType=responseJson["leaveType"];
-                startDate=responseJson["startDate"];
-                endDate=responseJson["endDate"];
-                $.each(leaveType,function(i,item){
-                	var sdate=startDate[i];
-                	var newdate = sdate.split("/").reverse().join("/");
-                	console.log("NewDate="+newdate);
-                	var edate=endDate[i];
-                	var newEndDate=edate.split("/").reverse().join("/");
-                     var l = leaveType[i];
-                     var s= new Date(newdate);
-                     var e= new Date(newEndDate);
-                     e.setDate(e.getDate() + 1);
-                     console.log("New end date="+e);
-                     console.log(l);
-                     console.log("startdate "+s);
-                     console.log("enddate"+newEndDate);
-                eventData= {
-        				title: l,
-        				start: newdate,
-        				end: e,
-        				allDay: false
-        				
-        			};
-                console.log(eventData);
-                
-                
-                $('#calendar').fullCalendar('renderEvent', eventData, true);
-                } );
-           },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    alert(jqXHR+" - "+textStatus+" - "+errorThrown);
-                   }
-                   
-            });
-           
-                $('#calendar').fullCalendar({
-                	header: {
-                		left: 'prev,next today',
-        				center: 'title',
-        				right: 'month,agendaWeek,agendaDay,listWeek'
-        			},
-        			navLinks: true,
-        			selectable:true,
-        			selectHelper:true,
-        			editable:true,
-        			eventLimit:true,
-        			eventClick: function(calEvent, jsEvent, view) {
-     				   var dt = calEvent.start;
-     				  var start = $.fullCalendar.formatDate(calEvent._start, 'DD/MM/YYYY');
-     				   console.log("EVENT DATE:"+start)
-     				   console.log("Title"+calEvent.title )
-     				    //alert('Event Clicked on : ' + dt);
-     				    var r = confirm("Delete " + calEvent.title + "\n" + start);
-     				    if (r === true) {
-     				       $('#calendar').fullCalendar('removeEvents', calEvent._id);
-     				      $.ajax({
-     				           url : "CancelLeave",
-     				           type : "POST",
-     				          data : {
-     	                           input : start,
-     	                             },
-     				           success : function(responseJson) {
-     				              console.log(responseJson);
-     				           },
-     				          error: function(jqXHR, textStatus, errorThrown) {
-     			                    alert(jqXHR+" - "+textStatus+" - "+errorThrown);
-     			                   }
-     				    });
-     				}
-        			},
-        			select: function(start,end){
-        				document.getElementById("submit").style.display="block";
-        				$('#leavedate').val(moment(start).format("YYYY-MM-DD"));
-        				console.log(moment(start).format("YYYY-MM-DD"));
-        			}
-        			
-        		
-        		});
-                
-               
-                 
-                 //$('textarea#output').attr('value',responseText);
-         
+<!--Icons-->
+<script src="js/lumino.glyphs.js"></script>
 
+<!--[if lt IE 9]>
+<script src="js/html5shiv.js"></script>
+<script src="js/respond.min.js"></script>
+<![endif]-->
 
-	});
-	
-</script>
 </head>
+
 <body>
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<%@ page import="java.sql.*" %>
+	<%@ page import="java.sql.*" %>
+	<%@ page import="com.leave.*" %>
+
+	<% 
+		HttpSession sess=request.getSession();
+		if(sess.getAttribute("name")==null){
+			response.sendRedirect("index.jsp");
+		}
+		else{
+		String userid=(String)sess.getAttribute("name");
+		Connection con =DBConnection.getConnection();
+		Statement stm=con.createStatement();
+		PreparedStatement p=con.prepareStatement("select leave_id,leavetype,startdate,enddate,comment,status from emp_leave where EmpID=? and status in ('Pending','Approved')");
+		p.setString(1, userid);
+		ResultSet rs =p.executeQuery();
+			if(!rs.first()){
+			request.setAttribute("ErrorMsg", "Soryy you have not applied for any leave");
+			}
+			else{%>
+	
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 		<div class="container-fluid">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar-collapse">
@@ -146,6 +65,7 @@
 							
 		</div><!-- /.container-fluid -->
 	</nav>
+		
 	<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
 		
 		<ul class="nav menu">
@@ -155,23 +75,98 @@
 			<li><a href="leavehistory.jsp"><svg class="glyph stroked table"><use xlink:href="#stroked-table"></use></svg> Leave History</a></li>
 			
 		</ul>
-	</div>
+	</div><!--/.sidebar-->
+		
 	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
 		<div class="row">
 			<ol class="breadcrumb">
 				<li><a href="#"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
-				<li class="active">Leave Form</li>
+				<li class="active">Leave History</li>
 			</ol>
+		</div><!--/.row-->
+		
+		<%if(request.getAttribute("errorMsg")!=null){%>
+				<h5 style="color:red;margin-left:20px">&#9888 <%=request.getAttribute("errorMsg").toString()%></h5>
+				<%}else if(request.getAttribute("successMsg")!=null){%>
+				<h5 style=color:green;margin-left:20px>&#10004 <%=request.getAttribute("successMsg").toString()%></h5>
+				<%} %>
+		
+		<div>&nbsp;
 		</div>
 		
+		<form method="post" action="CancelLeave">
 		
-		
-<input type="hidden" id="leavedate" value=""/>
-<div id="submit" style="display:none">
+		<div class="col-lg-12">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<table data-toggle="table" id="table-style" data-row-style="rowStyle" data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-search="true" data-select-item-name="toolbar1" data-pagination="true" data-sort-name="name" data-sort-order="desc">
+						    <thead>
+						    <tr>
+						        <th data-field="id" >Leave ID</th>
+						        <th data-field="type" >Leave Type</th>
+						        <th data-field="name"  data-sortable="true" >Start Date</th>
+						        <th data-field="e_date" >End Date</th>
+						        <th data-field="comment" >Comment</th>
+						        <th data-field="status" >Status</th>
+						        <th data-field="Cancel" >Cancel</th>
+						    </tr>
+						    </thead>
+						    <% do{ %>
+						    <tr>
+	  							<td><%= rs.getString(1) %>
+	  							<input type="hidden" name="lid" value="<%= rs.getString(1) %>"></td> 
+	  
+	 							<td><%= rs.getString(2) %>
+	 							<input type="hidden" name="leave_type" value="<%= rs.getString(2) %>"></td>
+	 
+	  							<td><%= rs.getString(3) %>
+	  							<input type="hidden" name="start_date" value="<%= rs.getString(3) %>"></td>
+	  
+	  							<td><%= rs.getString(4) %>
+	  							<input type="hidden" name="end_date" value="<%= rs.getString(4) %>"></td>
+	  
+	 							<td><%= rs.getString(5) %></td>
+	 
+	 							<td><%= rs.getString(6) %>
+	 							<input type="hidden" name="status" value="<%= rs.getString(6) %>"></td>
+	 							 
+						    	<td><input type="submit" name="submit" value="Cancel" class="btn btn-primary"></td>
+						    </tr>
+						    	<% }while(rs.next()) ;%>
+	  							<% con.close();} %>
+	  							<% } %>
+						</table>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>	<!--/.main-->
+	<script src="js/jquery-1.11.1.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/chart.min.js"></script>
+	<script src="js/chart-data.js"></script>
+	<script src="js/easypiechart.js"></script>
+	<script src="js/easypiechart-data.js"></script>
+	<script src="js/bootstrap-datepicker.js"></script>
+	<script src="js/bootstrap-table.js"></script>
+	<script>
+		$('#calendar').datepicker({
+		});
 
-<button style="background-color:#30a5ff;float:right;margin-left:50px;border-radius:5px;width:100px;height:30px">Cancel Leave</button>
-</div>
-<div id='calendar' style="margin-to:50px"></div>
-</div>
+		!function ($) {
+		    $(document).on("click","ul.nav li.parent > a > span.icon", function(){          
+		        $(this).find('em:first').toggleClass("glyphicon-minus");      
+		    }); 
+		    $(".sidebar span.icon").find('em:first').addClass("glyphicon-plus");
+		}(window.jQuery);
+
+		$(window).on('resize', function () {
+		  if ($(window).width() > 768) $('#sidebar-collapse').collapse('show')
+		})
+		$(window).on('resize', function () {
+		  if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
+		})
+	</script>	
 </body>
+
 </html>

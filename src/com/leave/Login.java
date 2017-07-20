@@ -43,9 +43,10 @@ public class Login extends HttpServlet {
 		//out.println(User);
 		//out.println(pass);
 
+		try {
 		if (User.contentEquals("employee")){
 			
-			try {
+			
 				
 				Connection con=DBConnection.getConnection();
 				Statement stm=con.createStatement();
@@ -67,31 +68,18 @@ public class Login extends HttpServlet {
 					HttpSession session=request.getSession();
 					session.setAttribute("name", id);
 					session.setAttribute("username", username);
-					/*response.sendRedirect("userwelcome.jsp");*/
-					request.getRequestDispatcher("userwelcome.jsp").include(request,response);
-	
+					//out.println("Login Successful");
+					//response.sendRedirect("userwelcome.jsp");
+					request.getRequestDispatcher("userwelcome.jsp").forward(request,response);
 				}
 				
 			}
+		}
 			
-				con.close();
-				//out.println("Invalid Credentials");
-				/*out.println("<script>alert('Enter The Correct Credentials')</script>");*/
-				request.setAttribute("ErrorMsg", "Enter The Correct Credentials");
-				/*request.getRequestDispatcher("index.jsp").include(request,response);*/
 				
-			
-		}
-	
-		catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		  }
-		}
 	
 		else if (User.contentEquals("admin")){
 			
-			try {
 				
 				Connection con=DBConnection.getConnection();
 				Statement stm=con.createStatement();
@@ -113,7 +101,8 @@ public class Login extends HttpServlet {
 						session.setAttribute("name",id);
 						session.setAttribute("username", username);
 						out.println("Login Successful");
-						response.sendRedirect("adminwelcome.jsp");
+						//response.sendRedirect("adminwelcome.jsp");
+						request.getRequestDispatcher("adminwelcome.jsp").forward(request,response);
 
 						
 					}
@@ -122,17 +111,15 @@ public class Login extends HttpServlet {
 					con.close();
 					//out.println("Invalid Credentials");
 					/*out.println("<script>alert('Enter The Correct Credentials')</script>");*/
-					request.setAttribute("ErrorMsg", "Enter The Correct Credentials");
-					/*request.getRequestDispatcher("index.jsp").include(request,response);*/
-					
-			}	
+			}
 		
+		request.setAttribute("ErrorMsg", "Enter The Correct Credentials");
+		request.getRequestDispatcher("index.jsp").forward(request,response);
+		}
 		  catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		  }
-		
-		}
-		request.getRequestDispatcher("index.jsp").include(request,response);
-	}
+
+}
 }

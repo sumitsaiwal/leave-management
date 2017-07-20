@@ -34,6 +34,11 @@
 		<div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-md-4 col-md-offset-4">
 			<div class="login-panel panel panel-default">
 				<div class="panel-heading">User Registration</div>
+				<%if(request.getAttribute("errorMsg")!=null){%>
+				<h5 style="color:red;margin-left:20px">&#9888 <%=request.getAttribute("errorMsg").toString()%></h5>
+				<%}else if(request.getAttribute("successMsg")!=null){%>
+				<h5 style=color:green;margin-left:20px>&#10004 <%=request.getAttribute("successMsg").toString()%></h5>
+				<%} %>
 				<div class="panel-body">
 					<form method="post" action="register">
 						<fieldset>

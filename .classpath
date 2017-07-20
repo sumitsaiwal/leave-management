@@ -15,5 +15,7 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="lib" path="C:/Users/skumar81/workspace/demoProjWeb/WebContent/WEB-INF/lib/javax.servlet-3.0.jar"/>
 	<classpathentry kind="lib" path="C:/Users/skumar81/workspace/Leave Management/WebContent/WEB-INF/lib/joda-time-2.1.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/java-json.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/javax.servlet-3.0.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

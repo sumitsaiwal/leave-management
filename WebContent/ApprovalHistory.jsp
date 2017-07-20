@@ -5,7 +5,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Leave History</title>
+<title>Approval History</title>
 <script src="js/jquery-1.11.1.min.js"></script>
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link href="css/datepicker3.css" rel="stylesheet">
@@ -32,14 +32,12 @@
 			response.sendRedirect("index.jsp");
 		}
 		else{
-		String userid=(String)sess.getAttribute("name");
 		Connection con =DBConnection.getConnection();
 		Statement stm=con.createStatement();
-		PreparedStatement p=con.prepareStatement("select leave_id,leavetype,startdate,enddate,comment,status from emp_leave where EmpID=?");
-		p.setString(1, userid);
+		PreparedStatement p=con.prepareStatement("select leave_id,leavetype,startdate,enddate,comment,status from emp_leave where status in ('Approved','Rejected','CancelApproved','CancelPending')");
 		ResultSet rs =p.executeQuery();
 			if(!rs.first()){
-			request.setAttribute("ErrorMsg", "Soryy you have not applied for any leave");
+			request.setAttribute("ErrorMsg", "Soryy you have not Approved/Rejected any leave");
 			}
 			else{%>
 	
@@ -68,10 +66,11 @@
 	<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
 		
 		<ul class="nav menu">
-			<li class="active"><a href="userwelcome.jsp"><svg class="glyph stroked dashboard-dial"><use xlink:href="#stroked-dashboard-dial"></use></svg> Dashboard</a></li>
-			<li><a href="newleave.jsp"><svg class="glyph stroked calendar"><use xlink:href="#stroked-calendar"></use></svg> Apply for Leave</a></li>
-			<li><a href="cancelLeave.jsp"><svg class="glyph stroked line-graph"><use xlink:href="#stroked-line-graph"></use></svg> Cancel Leave</a></li>
-			<li><a href="leavehistory.jsp"><svg class="glyph stroked table"><use xlink:href="#stroked-table"></use></svg> Leave History</a></li>
+		
+			<li class="active"><a href="adminwelcome.jsp"><svg class="glyph stroked dashboard-dial"><use xlink:href="#stroked-dashboard-dial"></use></svg> Dashboard</a></li>
+			<li><a href="Approval.jsp"><svg class="glyph stroked calendar"><use xlink:href="#stroked-calendar"></use></svg>Leave Approvals</a></li>
+			<li><a href="CancellationApproval.jsp"><svg class="glyph stroked table"><use xlink:href="#stroked-table"></use></svg>Cancellation Approvals</a></li>
+			<li><a href="ApprovalHistory.jsp"><svg class="glyph stroked line-graph"><use xlink:href="#stroked-line-graph"></use></svg>Approval History</a></li>
 			
 		</ul>
 	</div><!--/.sidebar-->
@@ -80,13 +79,16 @@
 		<div class="row">
 			<ol class="breadcrumb">
 				<li><a href="#"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
-				<li class="active">Leave History</li>
+				<li class="active">Approval History</li>
 			</ol>
 		</div><!--/.row-->
 		
 		<%if(request.getAttribute("errorMsg")!=null){%>
 				<h5 style="color:red;margin-left:20px">&#9888 <%=request.getAttribute("errorMsg").toString()%></h5>
+				<%}else if(request.getAttribute("successMsg")!=null){%>
+				<h5 style=color:green;margin-left:20px>&#10004 <%=request.getAttribute("successMsg").toString()%></h5>
 				<%} %>
+		
 		<div>&nbsp;
 		</div>
 		

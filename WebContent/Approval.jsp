@@ -5,7 +5,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Leave History</title>
+<title>Approval History</title>
 <script src="js/jquery-1.11.1.min.js"></script>
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link href="css/datepicker3.css" rel="stylesheet">
@@ -32,14 +32,12 @@
 			response.sendRedirect("index.jsp");
 		}
 		else{
-		String userid=(String)sess.getAttribute("name");
 		Connection con =DBConnection.getConnection();
 		Statement stm=con.createStatement();
-		PreparedStatement p=con.prepareStatement("select leave_id,leavetype,startdate,enddate,comment,status from emp_leave where EmpID=?");
-		p.setString(1, userid);
+		PreparedStatement p=con.prepareStatement("select emp_leave.leave_id, emp_leave.EmpID, emp_register.EmpName, emp_leave.leavetype, emp_leave.startdate, emp_leave.enddate, emp_leave.comment from emp_leave join emp_register on  emp_leave.EmpID=emp_register.EmpID where emp_leave.status='Pending'");
 		ResultSet rs =p.executeQuery();
 			if(!rs.first()){
-			request.setAttribute("ErrorMsg", "Soryy you have not applied for any leave");
+			request.setAttribute("ErrorMsg", "Soryy you dont have any leave to approve");
 			}
 			else{%>
 	
@@ -68,10 +66,11 @@
 	<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
 		
 		<ul class="nav menu">
-			<li class="active"><a href="userwelcome.jsp"><svg class="glyph stroked dashboard-dial"><use xlink:href="#stroked-dashboard-dial"></use></svg> Dashboard</a></li>
-			<li><a href="newleave.jsp"><svg class="glyph stroked calendar"><use xlink:href="#stroked-calendar"></use></svg> Apply for Leave</a></li>
-			<li><a href="cancelLeave.jsp"><svg class="glyph stroked line-graph"><use xlink:href="#stroked-line-graph"></use></svg> Cancel Leave</a></li>
-			<li><a href="leavehistory.jsp"><svg class="glyph stroked table"><use xlink:href="#stroked-table"></use></svg> Leave History</a></li>
+		
+			<li class="active"><a href="adminwelcome.jsp"><svg class="glyph stroked dashboard-dial"><use xlink:href="#stroked-dashboard-dial"></use></svg> Dashboard</a></li>
+			<li><a href="Approval.jsp"><svg class="glyph stroked calendar"><use xlink:href="#stroked-calendar"></use></svg>Leave Approvals</a></li>
+			<li><a href="CancellationApproval.jsp"><svg class="glyph stroked table"><use xlink:href="#stroked-table"></use></svg>Cancellation Approvals</a></li>
+			<li><a href="ApprovalHistory.jsp"><svg class="glyph stroked line-graph"><use xlink:href="#stroked-line-graph"></use></svg>Approval History</a></li>
 			
 		</ul>
 	</div><!--/.sidebar-->
@@ -80,16 +79,30 @@
 		<div class="row">
 			<ol class="breadcrumb">
 				<li><a href="#"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
-				<li class="active">Leave History</li>
+				<li class="active">Approvals</li>
 			</ol>
 		</div><!--/.row-->
 		
 		<%if(request.getAttribute("errorMsg")!=null){%>
 				<h5 style="color:red;margin-left:20px">&#9888 <%=request.getAttribute("errorMsg").toString()%></h5>
+				<%}else if(request.getAttribute("successMsg")!=null){%>
+				<h5 style=color:green;margin-left:20px>&#10004 <%=request.getAttribute("successMsg").toString()%></h5>
 				<%} %>
+		
 		<div>&nbsp;
 		</div>
 		
+		<script>
+				function submitter(btn) {
+    			var param = btn.parentElement.parentElement.id;
+    			var myForm = document.forms["myForm"];
+    			myForm.elements["param"].value = param;
+    			myForm.submit();
+				}
+		</script>
+						
+		<form method="post" action="Approval" id="myForm">
+		<input type="hidden" name="param" />
 		<div class="col-lg-12">
 				<div class="panel panel-default">
 					<div class="panel-body">
@@ -97,6 +110,8 @@
 						    <thead>
 						    <tr>
 						        <th data-field="id" >Leave ID</th>
+						        <th data-field="empid" >Employee ID</th>
+						        <th data-field="empname" >Employee Name</th>
 						        <th data-field="type" >Leave Type</th>
 						        <th data-field="name"  data-sortable="true">Start Date</th>
 						        <th data-field="e_date" >End Date</th>
@@ -105,23 +120,40 @@
 						    </tr>
 						    </thead>
 						    <% do{ %>
-						    <tr  class="<%= rs.getString(6) %>">
-	  							<td><%= rs.getString(1) %></td> 
+						     <tr>
+	  							<td><%= rs.getString(1) %>
+	  							<input type="hidden" name="lid" value="<%= rs.getString(1) %>"></td> 
 	  
-	 							<td><%= rs.getString(2) %></td>
-	 
-	  							<td><%= rs.getString(3) %></td>
+	 							<td><%= rs.getString(2) %>
+	 							<input type="hidden" name="emp_id" value="<%= rs.getString(2) %>"></td>
+	 							
+	 							<td><%= rs.getString(3) %></td>
+	 							
+	 							<td><%= rs.getString(4) %>
+	  							<input type="hidden" name="leave_type" value="<%= rs.getString(4) %>"></td>
+	 							
+	  							<td><%= rs.getString(5) %>
+	  							<input type="hidden" name="start_date" value="<%= rs.getString(5) %>"></td>
 	  
-	  							<td><%= rs.getString(4) %></td>
+	  							<td><%= rs.getString(6) %>
+	  							<input type="hidden" name="end_date" value="<%= rs.getString(6) %>"></td>
 	  
-	 							<td><%= rs.getString(5) %></td>
-	 
-	 							<td><%= rs.getString(6) %></td> 
+	 							<td><%= rs.getString(7) %></td>
+	 							 
+	 							<td>
+	 							<select name="status">
+								<option>Approved</option>
+								<option>Rejected</option>
+								</select>
+								
+						    	<input type="button" name="submit" value="Submit" onclick="submitter(this)" class="btn btn-primary"></td>
+						    </tr>
 						    
 						    	<% }while(rs.next()) ;%>
 	  							<% con.close();} %>
 	  							<% } %>
 						</table>
+						
 						<!-- <script>
 						    function rowStyle(row, index) {
 						        var classes = ['active', 'success', 'info', 'warning', 'danger'];
@@ -140,6 +172,7 @@
 					</div>
 				</div>
 			</div>
+		</form>
 	</div>	<!--/.main-->
 	
 	<script src="js/bootstrap.min.js"></script>

@@ -85,7 +85,7 @@
 		<div class="col-xs-12 col-md-8">
 			<div class="login-panel panel panel-default">
 				<div class="panel-heading">Apply for Leave</div>
-				<%if(request.getAttribute("errorMsg")!=null){ System.out.println("error: "+request.getAttribute("errorMsg"));%>
+				<%if(request.getAttribute("errorMsg")!=null){%>
 				<h5 style="color:red;margin-left:20px">&#9888 <%=request.getAttribute("errorMsg").toString()%></h5>
 				<%}else if(request.getAttribute("successMsg")!=null){%>
 				<h5 style=color:green;margin-left:20px>&#10004 <%=request.getAttribute("successMsg").toString()%></h5>
