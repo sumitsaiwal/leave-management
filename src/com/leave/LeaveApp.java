@@ -44,7 +44,7 @@ public class LeaveApp extends HttpServlet {
 		//out.println("ttesting123..");
 		response.setContentType("text/html");
 		
-		
+		int flag=0;
 		//getting the parameters
 		String leave_id=LeaveID.next();
 		String leave_type=request.getParameter("leavetype");
@@ -60,7 +60,6 @@ public class LeaveApp extends HttpServlet {
         //Date Validation
         
 		try {
-			int flag=0;
     		String currDate = GetCurrentDateTime.test();
     		/*int currDays=DateDiff.test(currDate, startdate);
     		out.println(currDays);*/
@@ -100,7 +99,7 @@ public class LeaveApp extends HttpServlet {
         
         //Date Validation
         
-		if(leave_type.contentEquals("Planned Leave")){
+		if(leave_type.contentEquals("Planned Leave") && flag==0){
 			
         	try {
         		int days=DateDiff.test(startdate, enddate);
@@ -160,7 +159,7 @@ public class LeaveApp extends HttpServlet {
     		
 		}
     	
-		else if(leave_type.contentEquals("Sick/Casual leave")){
+		else if(leave_type.contentEquals("Sick/Casual leave")  && flag==0){
 			
         	try {
         		

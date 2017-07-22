@@ -34,13 +34,10 @@
 		else{
 		Connection con =DBConnection.getConnection();
 		Statement stm=con.createStatement();
-		PreparedStatement p=con.prepareStatement("select leave_id,leavetype,startdate,enddate,comment,status from emp_leave where status in ('Approved','Rejected','CancelApproved','CancelPending')");
-		ResultSet rs =p.executeQuery();
-			if(!rs.first()){
-			request.setAttribute("ErrorMsg", "Soryy you have not Approved/Rejected any leave");
-			}
-			else{%>
-	
+		PreparedStatement p=con.prepareStatement("select leave_id,leavetype,startdate,enddate,comment,status,EmpID from emp_leave where status in ('Approved','Rejected','CancelApproved','CancelRejected')");
+		ResultSet rs =p.executeQuery();%>
+			
+			
 	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 		<div class="container-fluid">
 			<div class="navbar-header">
@@ -50,7 +47,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="userwelcome.jsp"><span>Easy</span>Leave</a>
+				<a class="navbar-brand" href="adminwelcome.jsp"><span>Easy</span>Leave</a>
 				<ul class="user-menu">
 					<li class="dropdown pull-right">
 						<svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg><font color="white"><%=session.getAttribute("username")%></font>
@@ -82,12 +79,10 @@
 				<li class="active">Approval History</li>
 			</ol>
 		</div><!--/.row-->
-		
-		<%if(request.getAttribute("errorMsg")!=null){%>
-				<h5 style="color:red;margin-left:20px">&#9888 <%=request.getAttribute("errorMsg").toString()%></h5>
-				<%}else if(request.getAttribute("successMsg")!=null){%>
-				<h5 style=color:green;margin-left:20px>&#10004 <%=request.getAttribute("successMsg").toString()%></h5>
-				<%} %>
+		<%if(!rs.first()){%>
+		<h5 style="color:red;margin-left:20px">&#9888 Sorry you have not Approved/Rejected any leave</h5>
+			<%}
+			else{%>
 		
 		<div>&nbsp;
 		</div>
@@ -99,6 +94,7 @@
 						    <thead>
 						    <tr>
 						        <th data-field="id" >Leave ID</th>
+						        <th data-field="eid" >Emp ID</th>
 						        <th data-field="type" >Leave Type</th>
 						        <th data-field="name"  data-sortable="true">Start Date</th>
 						        <th data-field="e_date" >End Date</th>
@@ -108,8 +104,11 @@
 						    </thead>
 						    <% do{ %>
 						    <tr  class="<%= rs.getString(6) %>">
+			
 	  							<td><%= rs.getString(1) %></td> 
-	  
+	  							
+	  							<td><%= rs.getString(7) %></td> 
+	  							
 	 							<td><%= rs.getString(2) %></td>
 	 
 	  							<td><%= rs.getString(3) %></td>

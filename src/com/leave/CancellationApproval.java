@@ -88,7 +88,7 @@ public class CancellationApproval extends HttpServlet {
 			    		p3.executeUpdate();
 			    		System.out.println("Rejected and updated Planned Leave");
 			    		request.setAttribute("successMsg","Successfully Rejected the Leave");
-			    		//request.getRequestDispatcher("Approval.jsp").forward(request,response);
+			    		//request.getRequestDispatcher("CancellationApproval.jsp").forward(request,response);
 					}
 				}
 				else if(leavetype.contentEquals("Sick/Casual leave")){
@@ -105,7 +105,7 @@ public class CancellationApproval extends HttpServlet {
 			    		p5.executeUpdate();
 			    		System.out.println("Rejected and updated Sick/Casual Leave");
 			    		request.setAttribute("successMsg","Successfully Rejected the Leave");
-			    		//request.getRequestDispatcher("Approval.jsp").forward(request,response);
+			    		//request.getRequestDispatcher("CancellationApproval.jsp").forward(request,response);
 					}
 				}
 				con.close();
@@ -132,7 +132,7 @@ public class CancellationApproval extends HttpServlet {
 				con.close();
 				System.out.println("Leave status is Approved");
 				request.setAttribute("successMsg","Successfully Approved the Leave");
-	    		//request.getRequestDispatcher("Approval.jsp").forward(request,response);
+	    		//request.getRequestDispatcher("CancellationApproval.jsp").forward(request,response);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -141,7 +141,7 @@ public class CancellationApproval extends HttpServlet {
 			
 		}
 		
-		request.getRequestDispatcher("Approval.jsp").forward(request,response);
+		request.getRequestDispatcher("CancellationApproval.jsp").forward(request,response);
 	}
 
 }

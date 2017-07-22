@@ -6,7 +6,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cancel Leave</title>
-
+<script src="js/jquery-1.11.1.min.js"></script>
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link href="css/datepicker3.css" rel="stylesheet">
 <link href="css/bootstrap-table.css" rel="stylesheet">
@@ -38,11 +38,8 @@
 		Statement stm=con.createStatement();
 		PreparedStatement p=con.prepareStatement("select leave_id,leavetype,startdate,enddate,comment,status from emp_leave where EmpID=? and status in ('Pending','Approved')");
 		p.setString(1, userid);
-		ResultSet rs =p.executeQuery();
-			if(!rs.first()){
-			request.setAttribute("ErrorMsg", "Soryy you have not applied for any leave");
-			}
-			else{%>
+		ResultSet rs =p.executeQuery();%>
+			
 	
 	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 		<div class="container-fluid">
@@ -81,15 +78,21 @@
 		<div class="row">
 			<ol class="breadcrumb">
 				<li><a href="#"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
-				<li class="active">Leave History</li>
+				<li class="active">Cancel Leave</li>
 			</ol>
 		</div><!--/.row-->
-		
-		<%if(request.getAttribute("errorMsg")!=null){%>
+			<%if(request.getAttribute("errorMsg")!=null){%>
 				<h5 style="color:red;margin-left:20px">&#9888 <%=request.getAttribute("errorMsg").toString()%></h5>
 				<%}else if(request.getAttribute("successMsg")!=null){%>
 				<h5 style=color:green;margin-left:20px>&#10004 <%=request.getAttribute("successMsg").toString()%></h5>
 				<%} %>
+			
+			<%if(!rs.first()){%>
+			<h5 style="color:red;margin-left:20px">&#9888 Sorry you don't any have leave to cancel</h5>
+			<%}
+			else{%>
+		
+				
 		
 		<div>&nbsp;
 		</div>

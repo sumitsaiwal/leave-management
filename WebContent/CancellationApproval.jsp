@@ -5,7 +5,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Approval History</title>
+<title>Cancellation Approvals</title>
 <script src="js/jquery-1.11.1.min.js"></script>
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link href="css/datepicker3.css" rel="stylesheet">
@@ -35,12 +35,8 @@
 		Connection con =DBConnection.getConnection();
 		Statement stm=con.createStatement();
 		PreparedStatement p=con.prepareStatement("select emp_leave.leave_id, emp_leave.EmpID, emp_register.EmpName, emp_leave.leavetype, emp_leave.startdate, emp_leave.enddate, emp_leave.comment from emp_leave join emp_register on  emp_leave.EmpID=emp_register.EmpID where emp_leave.status='CancelPending'");
-		ResultSet rs =p.executeQuery();
-			if(!rs.first()){
-			request.setAttribute("ErrorMsg", "Soryy you dont have any Cancellation to approve");
-			}
-			else{%>
-	
+		ResultSet rs =p.executeQuery();%>
+			
 	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 		<div class="container-fluid">
 			<div class="navbar-header">
@@ -50,7 +46,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="userwelcome.jsp"><span>Easy</span>Leave</a>
+				<a class="navbar-brand" href="adminwelcome.jsp"><span>Easy</span>Leave</a>
 				<ul class="user-menu">
 					<li class="dropdown pull-right">
 						<svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg><font color="white"><%=session.getAttribute("username")%></font>
@@ -82,18 +78,32 @@
 				<li class="active">Cancellation Approvals</li>
 			</ol>
 		</div><!--/.row-->
-		
 		<%if(request.getAttribute("errorMsg")!=null){%>
 				<h5 style="color:red;margin-left:20px">&#9888 <%=request.getAttribute("errorMsg").toString()%></h5>
 				<%}else if(request.getAttribute("successMsg")!=null){%>
 				<h5 style=color:green;margin-left:20px>&#10004 <%=request.getAttribute("successMsg").toString()%></h5>
 				<%} %>
-		
+				
+		<% if(!rs.first()){%>
+		<h5 style=color:red;margin-left:20px">&#9888 Sorry you dont have any Cancellation to approve</h5>
+		<%}
+			else{%>
+			
+				
+			
 		<div>&nbsp;
 		</div>
 		
-		<form method="post" action="CancellationApproval">
-		
+		<!-- <script>
+				function submitter(btn) {
+    			var param = btn.parentElement.parentElement.id;
+    			var myForm = document.forms["myForm"];
+    			myForm.elements["param"].value = param;
+    			myForm.submit();
+				}
+		</script>-->
+						
+		<form method="post" action="CancellationApproval" id="myForm">
 		<div class="col-lg-12">
 				<div class="panel panel-default">
 					<div class="panel-body">
@@ -108,6 +118,7 @@
 						        <th data-field="e_date" >End Date</th>
 						        <th data-field="comment" >Comment</th>
 						        <th data-field="status" >Status</th>
+						        
 						    </tr>
 						    </thead>
 						    <% do{ %>
@@ -118,10 +129,11 @@
 	 							<td><%= rs.getString(2) %>
 	 							<input type="hidden" name="emp_id" value="<%= rs.getString(2) %>"></td>
 	 							
-	 							<td><%= rs.getString(3) %></td>
+	 							<td><%= rs.getString(3) %>
+	 							<input type="hidden" name="status" value=""></td>
 	 							
 	 							<td><%= rs.getString(4) %>
-	  							<input type="hidden" name="leavetype" value="<%= rs.getString(4) %>"></td>
+	  							<input type="hidden" name="leave_type" value="<%= rs.getString(4) %>"></td>
 	 							
 	  							<td><%= rs.getString(5) %>
 	  							<input type="hidden" name="start_date" value="<%= rs.getString(5) %>"></td>
@@ -131,34 +143,25 @@
 	  
 	 							<td><%= rs.getString(7) %></td>
 	 							 
-	 							<td>
+	 							<!--  <td>
 	 							<select name="status">
-								<option>CancelApproved</option>
-								<option>CancelRejected</option>
+								<option>Approved</option>
+								<option>Rejected</option>
 								</select>
+								</td>-->
 								
-						    	<input type="submit" name="submit" value="Submit" class="btn btn-primary"></td>
+								<td>
+						    	<!--  <input type="button" name="submit" value="Submit" class="btn btn-primary"></td>-->
+						    	<button type="button" class="use-address">Approve</button></td>
+						    	<td><button type="button" class="rej-address">Reject</button></td>
+						    	
 						    </tr>
 						    
 						    	<% }while(rs.next()) ;%>
 	  							<% con.close();} %>
 	  							<% } %>
 						</table>
-						<!-- <script>
-						    function rowStyle(row, index) {
-						        var classes = ['active', 'success', 'info', 'warning', 'danger'];
-						        var data = document.getElementById("table-style");
-						        for (index = 0; index < data.rows.length; j=index++) {
-						            if ( data.rows[index].cells[5].innerHTML.indexOf("Pending") >= 0) 
-						            	return {classes: classes[0]};
-						            if ( data.rows[index].cells[5].innerHTML.indexOf("Approved") >= 0) 
-							            return {classes: classes[1]};
-							        if ( data.rows[index].cells[5].innerHTML.indexOf("Rejected") >= 0)
-							        	return {classes: classes[4]};
-						         }
-						        return {};
-						    }
-						</script> -->
+
 					</div>
 				</div>
 			</div>
@@ -172,6 +175,60 @@
 	<script src="js/easypiechart-data.js"></script>
 	<script src="js/bootstrap-datepicker.js"></script>
 	<script src="js/bootstrap-table.js"></script>
+	
+	<script type="text/javascript">
+		$(".use-address").click(function() {
+    		var myForm = document.forms["myForm"];
+    		var address = [];
+    	$(this).closest('tr').find('td').not(':last').each(function() {
+        	var textval = $(this).text(); // this will be the text of each <td>
+       		address.push(textval);
+   });
+    	console.log('Approved Loop');
+    	console.log(address[0].toString().replace(/^\s+|\s+$/g, ''));
+    	console.log(address[1].toString().replace(/^\s+|\s+$/g, ''));
+    	console.log(address[3].toString().replace(/^\s+|\s+$/g, ''));
+    	console.log(address[4].toString().replace(/^\s+|\s+$/g, ''));
+    	console.log(address[5].toString().replace(/^\s+|\s+$/g, ''));
+    	
+    	myForm.elements["lid"].value = address[0].toString().replace(/^\s+|\s+$/g, '');
+		myForm.elements["emp_id"].value = address[1].toString().replace(/^\s+|\s+$/g, '');
+		myForm.elements["leave_type"].value = address[3].toString().replace(/^\s+|\s+$/g, '');
+		myForm.elements["start_date"].value = address[4].toString().replace(/^\s+|\s+$/g, '');
+		myForm.elements["end_date"].value = address[5].toString().replace(/^\s+|\s+$/g, '');
+		myForm.elements["status"].value = "CancelApproved";
+		myForm.submit();
+    	
+    	/*console.log(myForm.elements["lid"].value);
+    	console.log(myForm.elements["emp_id"].value);
+    	console.log(myForm.elements["leave_type"].value);
+    	console.log(myForm.elements["start_date"].value);
+    	console.log(myForm.elements["end_date"].value);
+    	console.log(myForm.elements["status"].value);*/
+    	
+	});
+</script>
+
+<script type="text/javascript">
+		$(".rej-address").click(function() {
+    		var myForm = document.forms["myForm"];
+    		var address = [];
+    	$(this).closest('tr').find('td').not(':last').each(function() {
+        	var textval = $(this).text(); // this will be the text of each <td>
+       		address.push(textval);
+   });
+    	console.log('Rejected Loop');
+    	myForm.elements["lid"].value = address[0].toString().replace(/^\s+|\s+$/g, '');
+		myForm.elements["emp_id"].value = address[1].toString().replace(/^\s+|\s+$/g, '');
+		myForm.elements["leave_type"].value = address[3].toString().replace(/^\s+|\s+$/g, '');
+		myForm.elements["start_date"].value = address[4].toString().replace(/^\s+|\s+$/g, '');
+		myForm.elements["end_date"].value = address[5].toString().replace(/^\s+|\s+$/g, '');
+		myForm.elements["status"].value = "CancelRejected";
+		myForm.submit();
+    	
+	});
+</script>
+	
 	<script>
 		$('#calendar').datepicker({
 		});
@@ -190,6 +247,7 @@
 		  if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
 		})
 	</script>	
+	
 </body>
 
 </html>

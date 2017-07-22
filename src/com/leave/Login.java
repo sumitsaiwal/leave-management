@@ -42,7 +42,8 @@ public class Login extends HttpServlet {
 		String User=request.getParameter("useroptions");
 		//out.println(User);
 		//out.println(pass);
-
+		int flag=0;
+		
 		if (User.contentEquals("employee")){
 			
 			try {
@@ -63,7 +64,7 @@ public class Login extends HttpServlet {
 
 				if(id.equals(userid) &&  pass2.equals(pass3))
 				{
-					
+					flag=1;
 					HttpSession session=request.getSession();
 					session.setAttribute("name", id);
 					session.setAttribute("username", username);
@@ -73,12 +74,12 @@ public class Login extends HttpServlet {
 				}
 				
 			}
-			
+				if (flag==0){
 				con.close();
 				//out.println("Invalid Credentials");
 				/*out.println("<script>alert('Enter The Correct Credentials')</script>");*/
 				request.setAttribute("ErrorMsg", "Enter The Correct Credentials");
-				request.getRequestDispatcher("index.jsp").forward(request,response);*/
+				request.getRequestDispatcher("index.jsp").forward(request,response);}
 				
 			
 		}
@@ -108,7 +109,8 @@ public class Login extends HttpServlet {
 					String username=rs.getString(3);
 
 					if(id.equals(userid) &&  pass2.equals(pass3))
-					{
+					{	
+						flag=1;
 						HttpSession session=request.getSession();
 						session.setAttribute("name",id);
 						session.setAttribute("username", username);
@@ -119,12 +121,13 @@ public class Login extends HttpServlet {
 						
 					}
 					
-				}
+				}	
+					if (flag==0){
 					con.close();
 					//out.println("Invalid Credentials");
 					/*out.println("<script>alert('Enter The Correct Credentials')</script>");*/
 					request.setAttribute("ErrorMsg", "Enter The Correct Credentials");
-					request.getRequestDispatcher("index.jsp").forward(request,response);*/
+					request.getRequestDispatcher("index.jsp").forward(request,response);}
 					
 			}	
 		

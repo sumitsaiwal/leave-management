@@ -37,11 +37,8 @@
 		Statement stm=con.createStatement();
 		PreparedStatement p=con.prepareStatement("select leave_id,leavetype,startdate,enddate,comment,status from emp_leave where EmpID=?");
 		p.setString(1, userid);
-		ResultSet rs =p.executeQuery();
-			if(!rs.first()){
-			request.setAttribute("ErrorMsg", "Soryy you have not applied for any leave");
-			}
-			else{%>
+		ResultSet rs =p.executeQuery();%>
+			
 	
 	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 		<div class="container-fluid">
@@ -83,10 +80,11 @@
 				<li class="active">Leave History</li>
 			</ol>
 		</div><!--/.row-->
+		<%if(!rs.first()){%>
+			<h5 style="color:red;margin-left:20px">&#9888 Sorry you have not applied for any leave</h5>
+			<%}
+			else{%>
 		
-		<%if(request.getAttribute("errorMsg")!=null){%>
-				<h5 style="color:red;margin-left:20px">&#9888 <%=request.getAttribute("errorMsg").toString()%></h5>
-				<%} %>
 		<div>&nbsp;
 		</div>
 		

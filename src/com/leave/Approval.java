@@ -61,6 +61,9 @@ public class Approval extends HttpServlet {
 		System.out.println("input= "+lid);
 		System.out.println("input= "+emp_id);
 		System.out.println("input= "+status);
+		System.out.println("input= "+leavetype);
+		System.out.println("input= "+startdate);
+		System.out.println("input= "+enddate);
 		
 		String userid=(String)sessionName.getAttribute("name");
 		
