@@ -103,7 +103,6 @@
 				}
 		</script>-->
 						
-		<form method="post" action="CancellationApproval" id="myForm">
 		<div class="col-lg-12">
 				<div class="panel panel-default">
 					<div class="panel-body">
@@ -123,23 +122,17 @@
 						    </thead>
 						    <% do{ %>
 						     <tr>
-	  							<td><%= rs.getString(1) %>
-	  							<input type="hidden" name="lid" value="<%= rs.getString(1) %>"></td> 
+	  							<td><%= rs.getString(1) %></td> 
 	  
-	 							<td><%= rs.getString(2) %>
-	 							<input type="hidden" name="emp_id" value="<%= rs.getString(2) %>"></td>
+	 							<td><%= rs.getString(2) %></td>
 	 							
-	 							<td><%= rs.getString(3) %>
-	 							<input type="hidden" name="status" value=""></td>
+	 							<td><%= rs.getString(3) %></td>
 	 							
-	 							<td><%= rs.getString(4) %>
-	  							<input type="hidden" name="leave_type" value="<%= rs.getString(4) %>"></td>
+	 							<td><%= rs.getString(4) %></td>
 	 							
-	  							<td><%= rs.getString(5) %>
-	  							<input type="hidden" name="start_date" value="<%= rs.getString(5) %>"></td>
+	  							<td><%= rs.getString(5) %></td>
 	  
-	  							<td><%= rs.getString(6) %>
-	  							<input type="hidden" name="end_date" value="<%= rs.getString(6) %>"></td>
+	  							<td><%= rs.getString(6) %></td>
 	  
 	 							<td><%= rs.getString(7) %></td>
 	 							 
@@ -185,27 +178,51 @@
        		address.push(textval);
    });
     	console.log('Approved Loop');
-    	console.log(address[0].toString().replace(/^\s+|\s+$/g, ''));
-    	console.log(address[1].toString().replace(/^\s+|\s+$/g, ''));
-    	console.log(address[3].toString().replace(/^\s+|\s+$/g, ''));
-    	console.log(address[4].toString().replace(/^\s+|\s+$/g, ''));
-    	console.log(address[5].toString().replace(/^\s+|\s+$/g, ''));
+    	address[0] = address[0].toString().replace(/^\s+|\s+$/g, '');
+		address[1] = address[1].toString().replace(/^\s+|\s+$/g, '');
+		address[3] = address[3].toString().replace(/^\s+|\s+$/g, '');
+		address[4] = address[4].toString().replace(/^\s+|\s+$/g, '');
+		address[5] = address[5].toString().replace(/^\s+|\s+$/g, '');
+		address[6] = "CancelApproved";
     	
-    	myForm.elements["lid"].value = address[0].toString().replace(/^\s+|\s+$/g, '');
-		myForm.elements["emp_id"].value = address[1].toString().replace(/^\s+|\s+$/g, '');
-		myForm.elements["leave_type"].value = address[3].toString().replace(/^\s+|\s+$/g, '');
-		myForm.elements["start_date"].value = address[4].toString().replace(/^\s+|\s+$/g, '');
-		myForm.elements["end_date"].value = address[5].toString().replace(/^\s+|\s+$/g, '');
-		myForm.elements["status"].value = "CancelApproved";
-		myForm.submit();
-    	
-    	/*console.log(myForm.elements["lid"].value);
-    	console.log(myForm.elements["emp_id"].value);
-    	console.log(myForm.elements["leave_type"].value);
-    	console.log(myForm.elements["start_date"].value);
-    	console.log(myForm.elements["end_date"].value);
-    	console.log(myForm.elements["status"].value);*/
-    	
+    	    var form = document.createElement("form");
+    	    var element1 = document.createElement("input"); 
+    	    var element2 = document.createElement("input"); 
+    	    var element3 = document.createElement("input"); 
+    	    var element4 = document.createElement("input"); 
+    	    var element5 = document.createElement("input"); 
+    	    var element6 = document.createElement("input"); 
+
+    	    form.method = "POST";
+    	    form.action = "CancellationApproval";   
+
+    	    element1.value=address[0].toString();
+    	    element1.name="lid";
+    	    form.appendChild(element1);  
+
+    	    element2.value=address[1].toString();
+    	    element2.name="emp_id";
+    	    form.appendChild(element2);
+    	    
+    	    element3.value=address[3].toString();
+    	    element3.name="leave_type";
+    	    form.appendChild(element3);
+    	    
+    	    element4.value=address[4].toString();
+    	    element4.name="start_date";
+    	    form.appendChild(element4);
+    	    
+    	    element5.value=address[5].toString();
+    	    element5.name="end_date";
+    	    form.appendChild(element5);
+    	    
+    	    element6.value=address[6].toString();
+    	    element6.name="status";
+    	    form.appendChild(element6);
+
+    	    document.body.appendChild(form);
+
+    	    form.submit();
 	});
 </script>
 
@@ -218,13 +235,52 @@
        		address.push(textval);
    });
     	console.log('Rejected Loop');
-    	myForm.elements["lid"].value = address[0].toString().replace(/^\s+|\s+$/g, '');
-		myForm.elements["emp_id"].value = address[1].toString().replace(/^\s+|\s+$/g, '');
-		myForm.elements["leave_type"].value = address[3].toString().replace(/^\s+|\s+$/g, '');
-		myForm.elements["start_date"].value = address[4].toString().replace(/^\s+|\s+$/g, '');
-		myForm.elements["end_date"].value = address[5].toString().replace(/^\s+|\s+$/g, '');
-		myForm.elements["status"].value = "CancelRejected";
-		myForm.submit();
+    	
+    	address[0] = address[0].toString().replace(/^\s+|\s+$/g, '');
+		address[1] = address[1].toString().replace(/^\s+|\s+$/g, '');
+		address[3] = address[3].toString().replace(/^\s+|\s+$/g, '');
+		address[4] = address[4].toString().replace(/^\s+|\s+$/g, '');
+		address[5] = address[5].toString().replace(/^\s+|\s+$/g, '');
+		address[6] = "CancelRejected";
+    	
+    	    var form = document.createElement("form");
+    	    var element1 = document.createElement("input"); 
+    	    var element2 = document.createElement("input"); 
+    	    var element3 = document.createElement("input"); 
+    	    var element4 = document.createElement("input"); 
+    	    var element5 = document.createElement("input"); 
+    	    var element6 = document.createElement("input"); 
+
+    	    form.method = "POST";
+    	    form.action = "CancellationApproval";   
+
+    	    element1.value=address[0].toString();
+    	    element1.name="lid";
+    	    form.appendChild(element1);  
+
+    	    element2.value=address[1].toString();
+    	    element2.name="emp_id";
+    	    form.appendChild(element2);
+    	    
+    	    element3.value=address[3].toString();
+    	    element3.name="leave_type";
+    	    form.appendChild(element3);
+    	    
+    	    element4.value=address[4].toString();
+    	    element4.name="start_date";
+    	    form.appendChild(element4);
+    	    
+    	    element5.value=address[5].toString();
+    	    element5.name="end_date";
+    	    form.appendChild(element5);
+    	    
+    	    element6.value=address[6].toString();
+    	    element6.name="status";
+    	    form.appendChild(element6);
+
+    	    document.body.appendChild(form);
+
+    	    form.submit();
     	
 	});
 </script>

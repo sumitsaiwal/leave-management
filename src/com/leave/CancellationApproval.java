@@ -62,11 +62,11 @@ public class CancellationApproval extends HttpServlet {
 		
 		
 		if (status.contentEquals("CancelApproved")){
-			
+			Connection con=DBConnection.getConnection();
 			try {
 				System.out.println("Entered in CancelApproved loop");
 				int days=DateDiff.test(startdate, enddate);
-				Connection con=DBConnection.getConnection();
+				//Connection con=DBConnection.getConnection();
 				
 				Statement stm=con.createStatement();
 				PreparedStatement p1=con.prepareStatement("update emp_leave set status=? where leave_id=?");
@@ -86,7 +86,7 @@ public class CancellationApproval extends HttpServlet {
 			    		p3.setInt(1,(leave_left+days));
 			    		p3.setString(2, userid);
 			    		p3.executeUpdate();
-			    		System.out.println("Rejected and updated Planned Leave");
+			    		System.out.println("Approved and updated Planned Leave");
 			    		request.setAttribute("successMsg","Successfully Rejected the Leave");
 			    		//request.getRequestDispatcher("CancellationApproval.jsp").forward(request,response);
 					}
@@ -103,39 +103,55 @@ public class CancellationApproval extends HttpServlet {
 			    		p5.setInt(1,(leave_left+days));
 			    		p5.setString(2, userid);
 			    		p5.executeUpdate();
-			    		System.out.println("Rejected and updated Sick/Casual Leave");
+			    		System.out.println("Approved and updated Sick/Casual Leave");
 			    		request.setAttribute("successMsg","Successfully Rejected the Leave");
 			    		//request.getRequestDispatcher("CancellationApproval.jsp").forward(request,response);
 					}
 				}
-				con.close();
+				//con.close();
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}finally{
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 			}
 			
 		}
 		
-		if (status.contentEquals("CancelRejected")){
-			
+		else if (status.contentEquals("CancelRejected")){
+			Connection con=DBConnection.getConnection();
 			try {
-				System.out.println("Entered in CancelApproved Leave loop");
-				Connection con=DBConnection.getConnection();
+				System.out.println("Entered in CancelRejected Leave loop");
+				//Connection con=DBConnection.getConnection();
 				Statement stm=con.createStatement();
 				PreparedStatement p6=con.prepareStatement("update emp_leave set status=? where leave_id=?");
 				p6.setString(1,status);
 				p6.setString(2, lid);
 				p6.executeUpdate();
-				con.close();
-				System.out.println("Leave status is Approved");
+				//con.close();
+				System.out.println("Leave status is Rejected");
 				request.setAttribute("successMsg","Successfully Approved the Leave");
 	    		//request.getRequestDispatcher("CancellationApproval.jsp").forward(request,response);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}finally{
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 			}
 			
 			

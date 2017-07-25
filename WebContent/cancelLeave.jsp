@@ -11,7 +11,7 @@
 <link href="css/datepicker3.css" rel="stylesheet">
 <link href="css/bootstrap-table.css" rel="stylesheet">
 <link href="css/styles.css" rel="stylesheet">
-
+<script src="js/bootstrap-table.js"></script>
 <!--Icons-->
 <script src="js/lumino.glyphs.js"></script>
 
@@ -36,8 +36,10 @@
 		String userid=(String)sess.getAttribute("name");
 		Connection con =DBConnection.getConnection();
 		Statement stm=con.createStatement();
-		PreparedStatement p=con.prepareStatement("select leave_id,leavetype,startdate,enddate,comment,status from emp_leave where EmpID=? and status in ('Pending','Approved')");
+		//PreparedStatement p=con.prepareStatement("select leave_id,leavetype,startdate,enddate,comment,status from emp_leave where EmpID=? and status in ('Pending','Approved')");
+		PreparedStatement p=con.prepareStatement("select leave_id,leavetype,startdate,enddate,comment,status from emp_leave where EmpID=? AND (status='Pending' OR (status='Approved' AND enddate>=?))");
 		p.setString(1, userid);
+		p.setString(2,GetCurrentDateTime.test());
 		ResultSet rs =p.executeQuery();%>
 			
 	
@@ -97,8 +99,6 @@
 		<div>&nbsp;
 		</div>
 		
-		<form method="post" action="CancelLeave">
-		
 		<div class="col-lg-12">
 				<div class="panel panel-default">
 					<div class="panel-body">
@@ -111,29 +111,26 @@
 						        <th data-field="e_date" >End Date</th>
 						        <th data-field="comment" >Comment</th>
 						        <th data-field="status" >Status</th>
-						        <th data-field="Cancel" >Cancel</th>
 						    </tr>
 						    </thead>
 						    <% do{ %>
 						    <tr>
-	  							<td><%= rs.getString(1) %>
-	  							<input type="hidden" name="lid" value="<%= rs.getString(1) %>"></td> 
+	  							<td><%= rs.getString(1) %></td> 
 	  
-	 							<td><%= rs.getString(2) %>
-	 							<input type="hidden" name="leave_type" value="<%= rs.getString(2) %>"></td>
+	 							<td><%= rs.getString(2) %></td>
 	 
-	  							<td><%= rs.getString(3) %>
-	  							<input type="hidden" name="start_date" value="<%= rs.getString(3) %>"></td>
+	  							<td><%= rs.getString(3) %></td>
 	  
-	  							<td><%= rs.getString(4) %>
-	  							<input type="hidden" name="end_date" value="<%= rs.getString(4) %>"></td>
+	  							<td><%= rs.getString(4) %></td>
 	  
 	 							<td><%= rs.getString(5) %></td>
 	 
-	 							<td><%= rs.getString(6) %>
-	 							<input type="hidden" name="status" value="<%= rs.getString(6) %>"></td>
+	 							<td><%= rs.getString(6) %></td>
 	 							 
-						    	<td><input type="submit" name="submit" value="Cancel" class="btn btn-primary"></td>
+						    	<td>
+						    	<!--  <input type="button" name="submit" value="Submit" class="btn btn-primary"></td>-->
+						    	<button type="button" class="use-address">Cancel</button></td>
+						    	
 						    </tr>
 						    	<% }while(rs.next()) ;%>
 	  							<% con.close();} %>
@@ -142,9 +139,8 @@
 					</div>
 				</div>
 			</div>
-		</form>
 	</div>	<!--/.main-->
-	<script src="js/jquery-1.11.1.min.js"></script>
+	
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/chart.min.js"></script>
 	<script src="js/chart-data.js"></script>
@@ -152,6 +148,58 @@
 	<script src="js/easypiechart-data.js"></script>
 	<script src="js/bootstrap-datepicker.js"></script>
 	<script src="js/bootstrap-table.js"></script>
+	
+	<script type="text/javascript">
+		$(".use-address").click(function() {
+    		var address = [];
+    	$(this).closest('tr').find('td').not(':last').each(function() {
+        	var textval = $(this).text(); // this will be the text of each <td>
+       		address.push(textval);
+   });
+    	console.log('Approved Loop');
+    	address[0] = address[0].toString().replace(/^\s+|\s+$/g, '');
+		address[1] = address[1].toString().replace(/^\s+|\s+$/g, '');
+		address[2] = address[2].toString().replace(/^\s+|\s+$/g, '');
+		address[3] = address[3].toString().replace(/^\s+|\s+$/g, '');
+		address[5] = address[5].toString().replace(/^\s+|\s+$/g, '');
+    	
+    	    var form = document.createElement("form");
+    	    var element1 = document.createElement("input"); 
+    	    var element2 = document.createElement("input"); 
+    	    var element3 = document.createElement("input"); 
+    	    var element4 = document.createElement("input"); 
+    	    var element5 = document.createElement("input"); 
+
+    	    form.method = "POST";
+    	    form.action = "CancelLeave";   
+
+    	    element1.value=address[0].toString();
+    	    element1.name="lid";
+    	    form.appendChild(element1);  
+
+    	    element2.value=address[1].toString();
+    	    element2.name="leave_type";
+    	    form.appendChild(element2);
+    	    
+    	    element3.value=address[2].toString();
+    	    element3.name="start_date";
+    	    form.appendChild(element3);
+    	    
+    	    element4.value=address[3].toString();
+    	    element4.name="end_date";
+    	    form.appendChild(element4);
+    	    
+    	    element5.value=address[5].toString();
+    	    element5.name="status";
+    	    form.appendChild(element5);
+
+    	    document.body.appendChild(form);
+
+    	    form.submit();
+	});
+</script>
+	
+	
 	<script>
 		$('#calendar').datepicker({
 		});

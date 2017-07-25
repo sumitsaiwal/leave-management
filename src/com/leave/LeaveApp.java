@@ -86,6 +86,7 @@ public class LeaveApp extends HttpServlet {
 		        	}
 		        }
 			}
+			con.close();
 			if(flag==1){
 				/*out.println("<script>alert('Sorry you have already applied for these dates.')</script>");*/
 				request.setAttribute("errorMsg","Sorry you have already applied for these dates.");
@@ -100,10 +101,10 @@ public class LeaveApp extends HttpServlet {
         //Date Validation
         
 		if(leave_type.contentEquals("Planned Leave") && flag==0){
-			
+			Connection con=DBConnection.getConnection();
         	try {
         		int days=DateDiff.test(startdate, enddate);
-        		Connection con=DBConnection.getConnection();
+        		//Connection con=DBConnection.getConnection();
 				Statement stm=con.createStatement();
 				String qquery="select planned_leave from emp_register where EmpID=?";
 				PreparedStatement p=con.prepareStatement(qquery);
@@ -139,13 +140,13 @@ public class LeaveApp extends HttpServlet {
 						
 					}
 					else if (days>leave_left) {
-						con.close();
+						//con.close();
 						/*out.println("<script>alert('Sorry you don't have enough leave balance')</script>");*/
 						request.setAttribute("errorMsg","Sorry you don't have enough leave balance");
 						//request.getRequestDispatcher("newleave.jsp").forward(request,response);
 						}
 					else {
-						con.close();
+						//con.close();
 						/*out.println("<script>alert('Please enter the correct details')</script>");*/
 						request.setAttribute("errorMsg","Please enter the correct details");
 						//request.getRequestDispatcher("newleave.jsp").forward(request,response);
@@ -155,16 +156,23 @@ public class LeaveApp extends HttpServlet {
 			} catch (SQLException | ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}finally {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
     		
 		}
     	
 		else if(leave_type.contentEquals("Sick/Casual leave")  && flag==0){
-			
+			Connection con=DBConnection.getConnection();
         	try {
         		
         		int days=DateDiff.test(startdate, enddate);
-        		Connection con=DBConnection.getConnection();
+        		//Connection con=DBConnection.getConnection();
 				Statement stm=con.createStatement();
 				String qquery="select sick_cas_leave from emp_register where EmpID=?";
 				PreparedStatement p=con.prepareStatement(qquery);
@@ -191,7 +199,7 @@ public class LeaveApp extends HttpServlet {
 			    		ps.setInt(1,(leave_left-days));
 			    		ps.setString(2, userid);
 			    		ps.executeUpdate();
-			    		con.close();
+			    		//con.close();
 			    		/*out.println("<script>alert('Successfully Applied for Leave'</script>");
 			    		response.sendRedirect("userwelcome.jsp");*/
 			    		request.setAttribute("successMsg","Successfully Applied for Leave");
@@ -199,7 +207,7 @@ public class LeaveApp extends HttpServlet {
 						
 					}
 					else if (days>leave_left) {
-						con.close();
+						//con.close();
 						/*out.println("<script>alert('Sorry you don't have enough leave balance')</script>");
 						request.getRequestDispatcher("newleave.jsp").include(request,response);*/
 						request.setAttribute("errorMsg","Sorry you don't have enough leave balance");
@@ -207,7 +215,7 @@ public class LeaveApp extends HttpServlet {
 						}
 					
 					else {
-						con.close();
+						//con.close();
 						/*out.println("<script>alert('Please enter the correct details')</script>");
 						request.getRequestDispatcher("newleave.jsp").include(request,response);*/
 						request.setAttribute("errorMsg","Please enter the correct details");
@@ -218,6 +226,14 @@ public class LeaveApp extends HttpServlet {
 			} catch (SQLException | ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}finally {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 			}
     		
 		}

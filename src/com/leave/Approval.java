@@ -69,11 +69,11 @@ public class Approval extends HttpServlet {
 		
 		
 		if (status.contentEquals("Rejected")){
-			
+			Connection con=DBConnection.getConnection();
 			try {
 				System.out.println("Entered in Rejected loop");
 				int days=DateDiff.test(startdate, enddate);
-				Connection con=DBConnection.getConnection();
+				//Connection con=DBConnection.getConnection();
 				
 				Statement stm=con.createStatement();
 				PreparedStatement p1=con.prepareStatement("update emp_leave set status=? where leave_id=?");
@@ -115,34 +115,49 @@ public class Approval extends HttpServlet {
 			    		//request.getRequestDispatcher("Approval.jsp").forward(request,response);
 					}
 				}
-				con.close();
+				//con.close();
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}finally{
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 			}
 			
 		}
 		
-		if (status.contentEquals("Approved")){
-			
+		else if (status.contentEquals("Approved")){
+			Connection con=DBConnection.getConnection();
 			try {
 				System.out.println("Entered in Approved Leave loop");
-				Connection con=DBConnection.getConnection();
+				//Connection con=DBConnection.getConnection();
 				Statement stm=con.createStatement();
 				PreparedStatement p6=con.prepareStatement("update emp_leave set status=? where leave_id=?");
 				p6.setString(1,status);
 				p6.setString(2, lid);
 				p6.executeUpdate();
-				con.close();
+				//con.close();
 				System.out.println("Leave status is Approved");
 				request.setAttribute("successMsg","Successfully Approved the Leave");
 	    		//request.getRequestDispatcher("Approval.jsp").forward(request,response);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}finally {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			
 			

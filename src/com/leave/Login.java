@@ -45,10 +45,10 @@ public class Login extends HttpServlet {
 		int flag=0;
 		
 		if (User.contentEquals("employee")){
-			
+			Connection con=DBConnection.getConnection();
 			try {
 				
-				Connection con=DBConnection.getConnection();
+				//Connection con=DBConnection.getConnection();
 				Statement stm=con.createStatement();
 				String query="select * from emp_register";
 				ResultSet rs=((java.sql.Statement) stm).executeQuery(query);	
@@ -87,14 +87,21 @@ public class Login extends HttpServlet {
 		catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		  }finally{
+			  try {
+				con.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		  }
 		}
 	
 		else if (User.contentEquals("admin")){
-			
+			Connection con=DBConnection.getConnection();
 			try {
 				
-				Connection con=DBConnection.getConnection();
+				//Connection con=DBConnection.getConnection();
 				Statement stm=con.createStatement();
 				String query="select * from admin";
 				ResultSet rs=stm.executeQuery(query);
@@ -134,6 +141,13 @@ public class Login extends HttpServlet {
 		  catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		  }finally{
+			  try {
+				con.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		  }
 		
 		}

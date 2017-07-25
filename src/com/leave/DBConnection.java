@@ -15,7 +15,7 @@
 	        Connection con = null;
 	        
 	            try {
-	            	
+	            	//props.load(LeaveID.class.getResourceAsStream("/jdbc.properties"));
 					fis = new FileInputStream("C:/Users/skumar81/Desktop/jdbc.properties");
 					props.load(fis);
 		            // load the Driver Class
