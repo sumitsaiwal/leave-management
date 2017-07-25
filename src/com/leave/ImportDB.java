@@ -50,7 +50,7 @@ public class ImportDB extends HttpServlet {
 		Connection con=DBConnection.getConnection();
 		try {
 			Part s_file=request.getPart("file");
-			File uploads = new File("/script.sql");
+			File uploads = new File(System.getProperty("user.dir")+"/script.sql");
 			//File d_file = new File(uploads, "script.sql");
 
 			try (InputStream input = s_file.getInputStream()) {
