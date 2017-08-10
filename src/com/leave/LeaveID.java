@@ -1,11 +1,15 @@
 package com.leave;
 
 import java.util.UUID;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 	public class LeaveID { 
-
+	  private static final Logger logger = LogManager.getLogger(DBConnection.class.getName());
 	  public static String next() {
+		 logger.info("Function: LeaveID.next() : Used to create random leave_id");
 	     UUID u = UUID.randomUUID();
+	     logger.info("Returned random leave_id");
 	     return toIDString(u.getMostSignificantBits()) + toIDString(u.getLeastSignificantBits());
 	  }
 

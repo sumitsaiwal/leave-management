@@ -18,6 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 /**
  * Servlet implementation class ImportDB
  */
@@ -47,29 +50,39 @@ public class ImportDB extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		final Logger logger = LogManager.getLogger(ImportDB.class.getName());
 		Connection con=DBConnection.getConnection();
+		
 		try {
 			Part s_file=request.getPart("file");
 			File uploads = new File(System.getProperty("user.dir")+"/script.sql");
+			logger.trace("FIle Upload Intialization, File Path: "+System.getProperty("user.dir")+"/script.sql");
 			//File d_file = new File(uploads, "script.sql");
 
 			try (InputStream input = s_file.getInputStream()) {
 			    Files.copy(input, uploads.toPath(),StandardCopyOption.REPLACE_EXISTING);
 			    request.setAttribute("successMsg","Uploaded Successfully");
+			    logger.trace("Upload Successful");
+			    //System.out.println(uploads.getAbsolutePath());
 			}
 			
 			ScriptRunner runner = new ScriptRunner(con, false, false);
+			logger.trace("DB import intialised");
 			//String file = "/script.sql";
 			runner.runScript(new BufferedReader(new FileReader(uploads)));
 			request.setAttribute("successMsg1","Imported Successfully");
+			logger.trace("DB import Successful");
 		}  catch (Exception e) {
+			logger.error("Import Failed "+e);
 			request.setAttribute("ErrorMsg", "Import Failed");
-		    System.err.println("Unable to connect to server: " + e);
+		    //System.err.println("Unable to connect to server: " + e);
 		}finally{
 			try {
 				con.close();
+				logger.trace("DB Connection Closed");
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
+				logger.error(e);
 				e.printStackTrace();
 			}}
 		request.getRequestDispatcher("importdb.jsp").forward(request,response);

@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@ taglib prefix="log" uri="http://logging.apache.org/log4j/tld/log" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,6 +25,8 @@
 </head>
 
 <body>
+	<c:catch var="myException">
+	
 	<%@ page import="java.sql.*" %>
 	<%@ page import="java.sql.*" %>
 	<%@ page import="com.leave.*" %>
@@ -37,9 +41,9 @@
 		Connection con =DBConnection.getConnection();
 		Statement stm=con.createStatement();
 		//PreparedStatement p=con.prepareStatement("select leave_id,leavetype,startdate,enddate,comment,status from emp_leave where EmpID=? and status in ('Pending','Approved')");
-		PreparedStatement p=con.prepareStatement("select leave_id,leavetype,startdate,enddate,comment,status from emp_leave where EmpID=? AND (status='Pending' OR (status='Approved' AND enddate>=?))");
+		PreparedStatement p=con.prepareStatement("select leave_id,leavetype,startdate,enddate,comment,status from emp_leave where EmpID=? AND (status='Pending' OR status='Approved')");
 		p.setString(1, userid);
-		p.setString(2,GetCurrentDateTime.test());
+		//p.setString(2,GetCurrentDateTime.test());
 		ResultSet rs =p.executeQuery();%>
 			
 	
@@ -113,7 +117,11 @@
 						        <th data-field="status" >Status</th>
 						    </tr>
 						    </thead>
-						    <% do{ %>
+						    <% java.util.Date date1=ChangeDate.returnDate(rs.getString(4));
+						       java.util.Date date2=ChangeDate.returnDate(GetCurrentDateTime.test());
+						    
+						    %>
+						    <% do{ if(rs.getString(6).equals("Pending") ||  date1.compareTo(date2)>=0){ %>
 						    <tr>
 	  							<td><%= rs.getString(1) %></td> 
 	  
@@ -132,14 +140,20 @@
 						    	<button type="button" class="use-address">Cancel</button></td>
 						    	
 						    </tr>
-						    	<% }while(rs.next()) ;%>
+						    	<% }}while(rs.next()) ;%>
 	  							<% con.close();} %>
+	  							<log:info message="DB Connection closed" />
 	  							<% } %>
 						</table>
 					</div>
 				</div>
 			</div>
 	</div>	<!--/.main-->
+	
+	</c:catch>
+	<c:if test="${myException != null}">
+    <log:catching exception="${myException}" />
+	</c:if>
 	
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/chart.min.js"></script>

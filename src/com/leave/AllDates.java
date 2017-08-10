@@ -1,23 +1,29 @@
 package com.leave;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import org.joda.time.DateTime;
 
 
 public class AllDates {
+	
+	private static final Logger logger = LogManager.getLogger(AllDates.class.getName());
 
     public static List<DateTime> getDateRange(DateTime start, DateTime end) {
-
+    	
+    	logger.info("Function: AllDates.getDateRange(): Used to list the dates from DateTime \'start\' to DateTime \'end\'");
+    	logger.trace("Function: AllDates.getDateRange(): start="+start+", end="+end);
         List<DateTime> ret = new ArrayList<DateTime>();
         DateTime tmp = start;
         while(tmp.isBefore(end) || tmp.equals(end)) {
             ret.add(tmp);
             tmp = tmp.plusDays(1);
         }
+        logger.trace("List of the dates from DateTime "+start+" to DateTime "+end+" returned");
         return ret;
     }
 

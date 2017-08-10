@@ -12,6 +12,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 @WebServlet("/register")
 public class Register extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -28,6 +31,7 @@ public class Register extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		final Logger logger = LogManager.getLogger(Approval.class.getName());
 		
 		response.setContentType("text/html");
 		PrintWriter out=response.getWriter();
@@ -39,6 +43,7 @@ public class Register extends HttpServlet {
 		
 		
         	try {
+        		logger.info("User Registration Intialization: User_id= "+empid);
         		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         		String dateInString = GetCurrentDateTime.test();
         		Date date = formatter.parse(dateInString);
@@ -57,8 +62,9 @@ public class Register extends HttpServlet {
         		p.setInt(6, 12);
         		p.setInt(7, 15);
         		p.executeUpdate();
-        		
+        		logger.trace("User Registration Successful: User_id= "+empid);
         		con.close();
+        		logger.trace("DB Connection closed");
         		request.setAttribute("successMsg","Successfully Registered, LOGIN!!");
 	    		request.getRequestDispatcher("index.jsp").forward(request,response);
 				
@@ -68,9 +74,11 @@ public class Register extends HttpServlet {
         	catch (SQLException e) {
         		request.setAttribute("errorMsg","Registeration Failed!!");
         		request.getRequestDispatcher("register.jsp").forward(request,response);
+        		logger.error("Registeration Failed!!\n"+e);
 				e.printStackTrace();
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
+				logger.error(e);
 				e.printStackTrace();
 			}
 		  

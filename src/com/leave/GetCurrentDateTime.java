@@ -8,14 +8,18 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
-public class GetCurrentDateTime {
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
+public class GetCurrentDateTime {
+	private static final Logger logger = LogManager.getLogger(GetCurrentDateTime.class.getName());
     private static final DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
     
     public static String test(){
+    	logger.info("Function: GetCurrentDateTime.test(): Used to return the current date in dd/MM/yyyy format");
     	LocalDate localDate = LocalDate.now();
-    	
+    	logger.trace("Curret date returned "+DateTimeFormatter.ofPattern("dd/MM/yyyy").format(localDate));
 		return (DateTimeFormatter.ofPattern("dd/MM/yyyy").format(localDate));
     	
     }

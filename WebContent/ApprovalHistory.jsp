@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@ taglib prefix="log" uri="http://logging.apache.org/log4j/tld/log" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,6 +24,8 @@
 </head>
 
 <body>
+	<c:catch var="myException">
+	
 	<%@ page import="java.sql.*" %>
 	<%@ page import="java.sql.*" %>
 	<%@ page import="com.leave.*" %>
@@ -121,6 +125,7 @@
 						    
 						    	<% }while(rs.next()) ;%>
 	  							<% con.close();} %>
+	  							<log:info message="DB Connection closed" />
 	  							<% } %>
 						</table>
 						<!-- <script>
@@ -142,6 +147,11 @@
 				</div>
 			</div>
 	</div>	<!--/.main-->
+	
+	</c:catch>
+	<c:if test="${myException != null}">
+    <log:catching exception="${myException}" />
+	</c:if>
 	
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/chart.min.js"></script>

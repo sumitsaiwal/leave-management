@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Servlet implementation class Approval
  */
@@ -44,13 +47,16 @@ public class Approval extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		PrintWriter out=response.getWriter();
-		response.setContentType("text/html");
 		
-		HttpSession sessionName=request.getSession();
-		if(sessionName.getAttribute("name")==null){
-			response.sendRedirect("index.jsp");
-		}
+            final Logger logger = LogManager.getLogger(Approval.class.getName());
+			PrintWriter out=response.getWriter();
+			response.setContentType("text/html");
+			
+			HttpSession sessionName=request.getSession();
+			if(sessionName.getAttribute("name")==null){
+				response.sendRedirect("index.jsp");
+			}
+		
 		
 		String lid=request.getParameter("lid");
 		String emp_id=request.getParameter("emp_id");
@@ -58,20 +64,21 @@ public class Approval extends HttpServlet {
 		String leavetype=request.getParameter("leave_type");
 		String startdate=request.getParameter("start_date");
 		String enddate=request.getParameter("end_date");
-		System.out.println("input= "+lid);
-		System.out.println("input= "+emp_id);
-		System.out.println("input= "+status);
-		System.out.println("input= "+leavetype);
-		System.out.println("input= "+startdate);
-		System.out.println("input= "+enddate);
+		/*//System.out.println("input= "+lid);
+		//System.out.println("input= "+emp_id);
+		//System.out.println("input= "+status);
+		//System.out.println("input= "+leavetype);
+		//System.out.println("input= "+startdate);
+		//System.out.println("input= "+enddate);*/
 		
 		String userid=(String)sessionName.getAttribute("name");
 		
 		
 		if (status.contentEquals("Rejected")){
+			logger.info("If statement: status=Rejected, leaveid="+lid);
 			Connection con=DBConnection.getConnection();
 			try {
-				System.out.println("Entered in Rejected loop");
+				//System.out.println("Entered in Rejected loop");
 				int days=DateDiff.test(startdate, enddate);
 				//Connection con=DBConnection.getConnection();
 				
@@ -80,9 +87,11 @@ public class Approval extends HttpServlet {
 				p1.setString(1,status);
 				p1.setString(2, lid);
 				p1.executeUpdate();
+				logger.trace("Updated status of leave "+lid+" as Rejected for user "+userid);
 				
 				if (leavetype.contentEquals("Planned Leave")){
-					System.out.println("If its Planned Leave");
+					logger.info("If statement: leavetype=Planned Leave, leaveid="+lid);
+					//System.out.println("If its Planned Leave");
 					PreparedStatement p2=con.prepareStatement("select planned_leave from emp_register where EmpID=?");
 					p2.setString(1, userid);
 					ResultSet rs=p2.executeQuery();
@@ -93,13 +102,15 @@ public class Approval extends HttpServlet {
 			    		p3.setInt(1,(leave_left+days));
 			    		p3.setString(2, userid);
 			    		p3.executeUpdate();
-			    		System.out.println("Rejected and updated Planned Leave");
+			    		logger.trace("Updated the no of planned_leave for user="+userid+", leaveid="+lid);
+			    		//System.out.println("Rejected and updated Planned Leave");
 			    		request.setAttribute("successMsg","Successfully Rejected the Leave");
 			    		//request.getRequestDispatcher("Approval.jsp").forward(request,response);
 					}
 				}
 				else if(leavetype.contentEquals("Sick/Casual leave")){
-					System.out.println("If its Sick/Casual Leave");
+					logger.info("else if statement: leavetype=Sick/Casual leave, leaveid="+lid);
+					//System.out.println("If its Sick/Casual Leave");
 					PreparedStatement p4=con.prepareStatement("select sick_cas_leave from emp_register where EmpID=?");
 					p4.setString(1, userid);
 					ResultSet rs=p4.executeQuery();
@@ -110,7 +121,8 @@ public class Approval extends HttpServlet {
 			    		p5.setInt(1,(leave_left+days));
 			    		p5.setString(2, userid);
 			    		p5.executeUpdate();
-			    		System.out.println("Rejected and updated Sick/Casual Leave");
+			    		logger.trace("Updated the no of sick/casual leave for user "+userid+", leaveid="+lid);
+			    		//System.out.println("Rejected and updated Sick/Casual Leave");
 			    		request.setAttribute("successMsg","Successfully Rejected the Leave");
 			    		//request.getRequestDispatcher("Approval.jsp").forward(request,response);
 					}
@@ -118,15 +130,19 @@ public class Approval extends HttpServlet {
 				//con.close();
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
+				logger.error(e);
 				e.printStackTrace();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
+				logger.error(e);
 				e.printStackTrace();
 			}finally{
 				try {
 					con.close();
+					logger.trace("DB Connection closed");
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
+					logger.error(e);
 					e.printStackTrace();
 				}
 				
@@ -135,9 +151,10 @@ public class Approval extends HttpServlet {
 		}
 		
 		else if (status.contentEquals("Approved")){
+			logger.info("else if statement: status=Approved, leaveid="+lid);
 			Connection con=DBConnection.getConnection();
 			try {
-				System.out.println("Entered in Approved Leave loop");
+				//System.out.println("Entered in Approved Leave loop");
 				//Connection con=DBConnection.getConnection();
 				Statement stm=con.createStatement();
 				PreparedStatement p6=con.prepareStatement("update emp_leave set status=? where leave_id=?");
@@ -145,7 +162,8 @@ public class Approval extends HttpServlet {
 				p6.setString(2, lid);
 				p6.executeUpdate();
 				//con.close();
-				System.out.println("Leave status is Approved");
+				logger.trace("Updated status of leave "+lid+" as Approved for user "+userid);
+				//System.out.println("Leave status is Approved");
 				request.setAttribute("successMsg","Successfully Approved the Leave");
 	    		//request.getRequestDispatcher("Approval.jsp").forward(request,response);
 			} catch (SQLException e) {
@@ -154,12 +172,13 @@ public class Approval extends HttpServlet {
 			}finally {
 				try {
 					con.close();
+					logger.trace("DB Connection closed");
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
+					logger.error(e);
 					e.printStackTrace();
 				}
 			}
-			
 			
 		}
 		

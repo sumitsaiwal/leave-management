@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 @WebServlet("/Login")
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -33,6 +36,8 @@ public class Login extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		final Logger logger = LogManager.getLogger(Login.class.getName());
+		
 		response.setContentType("text/html");
 		PrintWriter out=response.getWriter();
 		
@@ -45,6 +50,7 @@ public class Login extends HttpServlet {
 		int flag=0;
 		
 		if (User.contentEquals("employee")){
+			logger.info("If statement: User=employee");
 			Connection con=DBConnection.getConnection();
 			try {
 				
@@ -69,13 +75,17 @@ public class Login extends HttpServlet {
 					session.setAttribute("name", id);
 					session.setAttribute("username", username);
 					/*response.sendRedirect("userwelcome.jsp");*/
+					logger.trace("Login successful for user= "+id);
 					request.getRequestDispatcher("userwelcome.jsp").forward(request,response);
+					break;
 	
 				}
 				
 			}
 				if (flag==0){
-				con.close();
+				logger.trace("Login failed for entered user= "+id);
+				//con.close();
+				//logger.trace("DB Connection closed");
 				//out.println("Invalid Credentials");
 				/*out.println("<script>alert('Enter The Correct Credentials')</script>");*/
 				request.setAttribute("ErrorMsg", "Enter The Correct Credentials");
@@ -86,18 +96,22 @@ public class Login extends HttpServlet {
 	
 		catch (SQLException e) {
 			// TODO Auto-generated catch block
+			logger.error(e);
 			e.printStackTrace();
 		  }finally{
 			  try {
 				con.close();
+				logger.trace("DB Connection closed");
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
+				logger.error(e);
 				e.printStackTrace();
 			}
 		  }
 		}
 	
 		else if (User.contentEquals("admin")){
+			logger.info("If statement: User=admin");
 			Connection con=DBConnection.getConnection();
 			try {
 				
@@ -121,16 +135,19 @@ public class Login extends HttpServlet {
 						HttpSession session=request.getSession();
 						session.setAttribute("name",id);
 						session.setAttribute("username", username);
-						out.println("Login Successful");
+						logger.trace("Login successful for admin= "+id);
+						//out.println("Login Successful");
 						request.getRequestDispatcher("adminwelcome.jsp").forward(request,response);
 						//response.sendRedirect("adminwelcome.jsp");
+						break;
 
 						
 					}
 					
 				}	
 					if (flag==0){
-					con.close();
+					logger.trace("Login failed for entered admin= "+id);
+					//con.close();
 					//out.println("Invalid Credentials");
 					/*out.println("<script>alert('Enter The Correct Credentials')</script>");*/
 					request.setAttribute("ErrorMsg", "Enter The Correct Credentials");
@@ -140,12 +157,15 @@ public class Login extends HttpServlet {
 		
 		  catch (SQLException e) {
 			// TODO Auto-generated catch block
+			logger.error(e);
 			e.printStackTrace();
 		  }finally{
 			  try {
 				con.close();
+				logger.trace("DB Connection closed");
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
+				logger.error(e);
 				e.printStackTrace();
 			}
 		  }
