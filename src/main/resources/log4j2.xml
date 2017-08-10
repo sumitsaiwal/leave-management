@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <!--  <PatternLayout pattern="%highlight{%d{dd MMM yyyy HH:mm:ss} [%t] %-5level %logger{36} - %msg%n}"/> -->
+      <PatternLayout pattern="%d{dd MMM yyyy HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
+    </Console>
+    <File name="LogFile" fileName="app.log">
+      <!--  <PatternLayout pattern="%highlight{%d{dd MMM yyyy HH:mm:ss} [%t] %-5level %logger{36} - %msg%n}"/> -->
+      <PatternLayout pattern="%d{dd MMM yyyy HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
+    </File>
+  </Appenders>
+  <Loggers>
+    <!--<Logger name="com.leave" level="trace">
+      <AppenderRef ref="Console" level="trace"/>
+      <AppenderRef ref="LogFile" level="info"/>
+    </Logger>-->
+    <Root level="trace">
+      <AppenderRef ref="Console" level="trace"/>
+      <AppenderRef ref="LogFile" level="error"/>
+    </Root>
+  </Loggers>
+</Configuration>
