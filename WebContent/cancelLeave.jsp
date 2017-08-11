@@ -118,9 +118,10 @@
 						    </tr>
 						    </thead>
 						    <% 
-						       java.util.Date date2=ChangeDate.returnDate(GetCurrentDateTime.test());
+						       java.util.Date date1=ChangeDate.returnDate(GetCurrentDateTime.test());
+						    
 						    %>
-						    <% do{ if(rs.getString(6).equals("Pending") ||  ChangeDate.returnDate(rs.getString(4)).compareTo(date2)>=0){ %>
+						    <% do{ if(rs.getString(6).equals("Pending") ||  ChangeDate.returnDate(rs.getString(4)).compareTo(date1)>=0){ %>
 						    <tr>
 	  							<td><%= rs.getString(1) %></td> 
 	  

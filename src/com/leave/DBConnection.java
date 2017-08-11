@@ -27,25 +27,10 @@ package com.leave;
 		
 	    public static Connection getConnection() {
 	    	
-	        /*Properties props = new Properties();
-	        FileInputStream fis = null;*/
 	        Connection con = null;
 	        
 	        try {
 
-	            	
-	            	/*//props.load(LeaveID.class.getResourceAsStream("/jdbc.properties"));
-					fis = new FileInputStream("C:/Users/skumar81/Desktop/jdbc.properties");
-					props.load(fis);
-		            // load the Driver Class
-					
-		            Class.forName(props.getProperty("JDBC_DRIVER"));
-		 
-		            // create the connection now
-		            con = DriverManager.getConnection(props.getProperty("JDBC_CONNECTION"),
-		                    props.getProperty("JDBC_USER"),
-		                    props.getProperty("JDBC_PASSWORD"));
-		            		props.load(fis);*/
 	        		logger.trace("---Trying to establish DB connection---");
 	        		logger.trace("Host="+host+", DB="+database+", User="+user+", Password=******");
 	        		String url = String.format("jdbc:mysql://%s/%s", host, database);
@@ -54,11 +39,11 @@ package com.leave;
 	        		Properties properties = new Properties();
 	        		properties.setProperty("user", user);
 	        		properties.setProperty("password", password);
-	        		/*properties.setProperty("useSSL", "true");
+	        		properties.setProperty("useSSL", "true");
 	        		properties.setProperty("verifyServerCertificate", "true");
-	        		properties.setProperty("requireSSL", "false");*/
+	        		properties.setProperty("requireSSL", "false");
     			
-	        		Class.forName("com.mysql.jdbc.Driver");
+	        		Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
 	 
 	        		// create the connection now
 	        		con = DriverManager.getConnection(url, properties);
@@ -70,6 +55,14 @@ package com.leave;
 	            	logger.error(e);
 					e.printStackTrace();
 				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					logger.error(e);
+					e.printStackTrace();
+				} catch (InstantiationException e) {
+					// TODO Auto-generated catch block
+					logger.error(e);
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
 					// TODO Auto-generated catch block
 					logger.error(e);
 					e.printStackTrace();

@@ -42,10 +42,11 @@
 		Connection con =DBConnection.getConnection();
 		Statement stm=con.createStatement();
 		//PreparedStatement p=con.prepareStatement("select status from emp_leave");
-		ResultSet rs =stm.executeQuery("select status from emp_leave");
+		ResultSet rs =stm.executeQuery("select status,startdate from emp_leave");
+		java.util.Date date1=ChangeDate.returnDate(GetCurrentDateTime.test());
 		while (rs.next()){
 			
-			if (rs.getString(1).contentEquals("Pending")){
+			if (rs.getString(1).contentEquals("Pending") && ChangeDate.returnDate(rs.getString(2)).compareTo(date1)>=0){
 				++no_Pending;
 			}
 			else if (rs.getString(1).contentEquals("Approved")){

@@ -124,7 +124,11 @@
 						        
 						    </tr>
 						    </thead>
-						    <% do{ %>
+						    <% 
+						       java.util.Date date1=ChangeDate.returnDate(GetCurrentDateTime.test());
+						    
+						    %>
+						    <% do{if(ChangeDate.returnDate(rs.getString(5)).compareTo(date1)>=0){  %>
 						     <tr>
 	  							<td><%= rs.getString(1) %></td> 
 	  
@@ -154,7 +158,7 @@
 						    	
 						    </tr>
 						    
-						    	<% }while(rs.next()) ;%>
+						    	<% }}while(rs.next()) ;%>
 	  							<% con.close();} %>
 	  							<log:info message="DB Connection closed" />
 	  							<% } %>

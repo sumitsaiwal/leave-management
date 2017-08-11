@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="WARN">
+<Configuration status="WARN" packages="com.microsoft.applicationinsights.Log4j">
   <Appenders>
     <Console name="Console" target="SYSTEM_OUT">
       <!--  <PatternLayout pattern="%highlight{%d{dd MMM yyyy HH:mm:ss} [%t] %-5level %logger{36} - %msg%n}"/> -->
       <PatternLayout pattern="%d{dd MMM yyyy HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
     </Console>
-    <File name="LogFile" fileName="C:/Users/skumar81/workspace/Leave Management/log/app.log">
+    <File name="LogFile" fileName="app.log">
       <!--  <PatternLayout pattern="%highlight{%d{dd MMM yyyy HH:mm:ss} [%t] %-5level %logger{36} - %msg%n}"/> -->
       <PatternLayout pattern="%d{dd MMM yyyy HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
     </File>
+	<ApplicationInsightsAppender name="aiAppender" />
   </Appenders>
   <Loggers>
     <!--<Logger name="com.leave" level="trace">
@@ -17,7 +18,9 @@
     </Logger>-->
     <Root level="trace">
       <AppenderRef ref="Console" level="trace"/>
+	  <AppenderRef ref="aiAppender" level="trace"/>
       <AppenderRef ref="LogFile" level="error"/>
+	  
     </Root>
   </Loggers>
 </Configuration>
