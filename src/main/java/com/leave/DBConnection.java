@@ -15,6 +15,11 @@ package com.leave;
 		static String user = "root";
 		static String password = "admin@123";*/
 		
+		/*static String host ="leavedbserver.mysql.database.azure.com:3306" ;
+		static String database = "leavedb";
+		static String user = "dbuser@leavedbserver";
+		static String password = "passport@123";*/
+		
 		static String host = System.getenv("db_host");
 		static String database = System.getenv("db_name");
 		static String user = System.getenv("db_user");
@@ -38,7 +43,7 @@ package com.leave;
 	        		properties.setProperty("verifyServerCertificate", "true");
 	        		properties.setProperty("requireSSL", "false");
     			
-	        		Class.forName("com.mysql.jdbc.Driver");
+	        		Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
 	 
 	        		// create the connection now
 	        		con = DriverManager.getConnection(url, properties);
@@ -50,6 +55,14 @@ package com.leave;
 	            	logger.error(e);
 					e.printStackTrace();
 				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					logger.error(e);
+					e.printStackTrace();
+				} catch (InstantiationException e) {
+					// TODO Auto-generated catch block
+					logger.error(e);
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
 					// TODO Auto-generated catch block
 					logger.error(e);
 					e.printStackTrace();

@@ -23,10 +23,7 @@ private static final Logger logger = LogManager.getLogger(ChangeDate.class.getNa
 	}
 	
 	public static Date returnDate(String date) throws ParseException{
-		logger.info("Function: ChangeDate.returnDate(): Used to parse the date string of format dd/MM/yyyy into Date type");
-		logger.trace("Function: ChangeDate.returnDate(): date="+date);
 		Date date1 = myFormat.parse(date);
-		logger.trace("Date parsed : "+date+" to "+date1);
 		return date1;
 		
 	}

@@ -121,12 +121,47 @@
 						        <th data-field="name"  data-sortable="true">Start Date</th>
 						        <th data-field="e_date" >End Date</th>
 						        <th data-field="comment" >Comment</th>
-						        <th data-field="status" >Status</th>
+						        <!-- <th data-field="status" >Status</th> -->
 						        
 						    </tr>
 						    </thead>
+						    <% 
+						       java.util.Date date1=ChangeDate.returnDate(GetCurrentDateTime.test());
+						    
+						    %>
 						    <% do{ %>
+						    <% if(ChangeDate.returnDate(rs.getString(5)).compareTo(date1)<=0){ %>
 						     <tr>
+	  							<td><%= rs.getString(1) %></td> 
+	  
+	 							<td><%= rs.getString(2) %></td>
+	 							
+	 							<td><%= rs.getString(3) %></td>
+	 							
+	 							<td><%= rs.getString(4) %></td>
+	 							
+	  							<td><%= rs.getString(5) %></td>
+	  
+	  							<td><%= rs.getString(6) %></td>
+	  
+	 							<td><%= rs.getString(7) %></td>
+	 							 
+	 							<!--  <td>
+	 							<select name="status">
+								<option>Approved</option>
+								<option>Rejected</option>
+								</select>
+								</td>-->
+								
+								<td>
+						    	<!--  <input type="button" name="submit" value="Submit" class="btn btn-primary"></td>-->
+						    	<button type="button" class="use-address">Approve</button></td>
+						    	<!-- <td><button type="button" class="rej-address">Reject</button></td> -->
+						    	
+						    </tr>
+						    
+						    	<% }else { %>
+						    	<tr>
 	  							<td><%= rs.getString(1) %></td> 
 	  
 	 							<td><%= rs.getString(2) %></td>
@@ -154,7 +189,7 @@
 						    	<td><button type="button" class="rej-address">Reject</button></td>
 						    	
 						    </tr>
-						    
+						    	<% } %>
 						    	<% }while(rs.next()) ;%>
 	  							<% con.close();} %>
 	  							<log:info message="DB Connection closed" />
