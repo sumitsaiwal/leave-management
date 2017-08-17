@@ -5,7 +5,11 @@
       <!--  <PatternLayout pattern="%highlight{%d{dd MMM yyyy HH:mm:ss} [%t] %-5level %logger{36} - %msg%n}"/> -->
       <PatternLayout pattern="%d{dd MMM yyyy HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
     </Console>
-    <File name="LogFile" fileName="app.log">
+    <File name="LogFile" fileName="${sys:LOG_HOME}/easyleave-app.log">
+      <!--  <PatternLayout pattern="%highlight{%d{dd MMM yyyy HH:mm:ss} [%t] %-5level %logger{36} - %msg%n}"/> -->
+      <PatternLayout pattern="%d{dd MMM yyyy HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
+    </File>
+	<File name="ErrorLogFile" fileName="${sys:LOG_HOME}/easyleave-app-error.log">
       <!--  <PatternLayout pattern="%highlight{%d{dd MMM yyyy HH:mm:ss} [%t] %-5level %logger{36} - %msg%n}"/> -->
       <PatternLayout pattern="%d{dd MMM yyyy HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
     </File>
@@ -19,7 +23,8 @@
     <Root level="trace">
       <AppenderRef ref="Console" level="trace"/>
 	  <AppenderRef ref="aiAppender" level="trace"/>
-      <AppenderRef ref="LogFile" level="error"/>
+	  <AppenderRef ref="LogFile" level="trace"/>
+      <AppenderRef ref="ErrorLogFile" level="error"/>
 	  
     </Root>
   </Loggers>
