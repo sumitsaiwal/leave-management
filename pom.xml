@@ -55,10 +55,22 @@
       <artifactId>mysql-connector-java</artifactId>
       <version>6.0.6</version>
    </dependency>
+   <dependency>
+      <groupId>com.microsoft.azure</groupId>
+      <artifactId>applicationinsights-core</artifactId>
+      <!-- or applicationinsights-core for bare API -->
+      <version>[1.0,)</version>
+    </dependency>
+   <dependency>
+      <groupId>com.microsoft.azure</groupId>
+      <artifactId>applicationinsights-web</artifactId>
+      <!-- or applicationinsights-core for bare API -->
+      <version>[1.0,)</version>
+    </dependency>
 	<dependency>
 	  <groupId>com.microsoft.azure</groupId>
       <artifactId>applicationinsights-logging-log4j2</artifactId>
-      <version>1.0.1</version>
+      <version>[1.0,)</version>
 	</dependency>
 
   </dependencies>
