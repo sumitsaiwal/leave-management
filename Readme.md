@@ -30,5 +30,8 @@ Application Insights:
 
 Application Insights SDK looks for the instrumentation key in this order:
 System property: -DAPPLICATION_INSIGHTS_IKEY=your_ikey
-Environment variable: APPLICATION_INSIGHTS_IKEY
+Environment variable: APPLICATION_INSIGHTS_IKEY, APPINSIGHTS_INSTRUMENTATIONKEY
 Configuration file: ApplicationInsights.xml
+
+https://docs.microsoft.com/en-us/azure/application-insights/app-insights-java-get-started
+https://docs.microsoft.com/en-us/azure/application-insights/app-insights-java-trace-logs
