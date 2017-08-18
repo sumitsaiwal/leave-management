@@ -23,3 +23,12 @@ Trying to write logs into :${jvmrunargs:site.logdir}
 Log file location: D:/home/LogFiles/
 
 Log4J Configuration location: file:///D:/home/site/wwwroot/webapps/Leave Management/WEB-INF/classes/log4j2.xml
+
+-----------------------------------------------------------------
+
+Application Insights:
+
+Application Insights SDK looks for the instrumentation key in this order:
+System property: -DAPPLICATION_INSIGHTS_IKEY=your_ikey
+Environment variable: APPLICATION_INSIGHTS_IKEY
+Configuration file: ApplicationInsights.xml
